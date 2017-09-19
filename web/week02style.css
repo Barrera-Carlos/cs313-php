@@ -1,0 +1,12 @@
+#first{background: red;
+font-size: 1.875em;}
+
+#second{background: white;
+font-size: 1.875em;}
+
+#third{background: blue;
+font-size: 1.875em;}
+
+.div:hover {
+	font-weight: bold;
+}
