@@ -1,0 +1,16 @@
+ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #a04187
+}
+
+li a{
+  display: block;
+  width: 60px;
+}
+
+body {
+  background-image: url(imgP/typing.gif);
+
+}
