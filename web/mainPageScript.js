@@ -1,0 +1,3 @@
+/*jquwey functions need to be inside a document ready event
+so the hquery code does not run before the document if fininidhed
+loading*/
