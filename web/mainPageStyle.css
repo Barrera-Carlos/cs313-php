@@ -2,15 +2,16 @@ ul{
   list-style-type: none;
   margin: 0;
   padding: 0;
-  background-color: #a04187
 }
 
-li a{
-  display: block;
-  width: 60px;
+li{
+  display: inline;
+}
+
+a, h1{
+  color: black;
 }
 
 body {
-  background-image: url(imgP/typing.gif);
-
+  background-image: url(imgP/wooden-floor.jpg);
 }
