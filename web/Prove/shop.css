@@ -1,4 +1,16 @@
 .shop-list{
-float: none;
-margin: 0 auto;
+  padding-top: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  float: none;
+  margin: 0 auto;
+
+  -webkit-column-count: 2; /* Chrome, Safari, Opera */
+  -moz-column-count: 2; /* Firefox */
+  column-count: 2;
+
+  -webkit-column-width: 20px; /* Chrome, Safari, Opera */
+    -moz-column-width: 20px; /* Firefox */
+    column-width: 20px;
 }
