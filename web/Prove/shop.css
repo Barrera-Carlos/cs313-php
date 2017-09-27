@@ -1,4 +1,8 @@
 .shop-list{
   padding-top: 60px;
+}
 
+.col-centered{
+  float: none;
+  margin: 0 auto;
 }
