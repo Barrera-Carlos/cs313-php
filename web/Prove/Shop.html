@@ -9,7 +9,7 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
       <link rel="stylesheet" href="shop.css">
-      <script type="text/javascript" src="shop.js"></script>
+      <script type="text/javascript" src="Shop.js"></script>
   </head>
   <body>
 
@@ -29,9 +29,8 @@
             <li><a href="../CS313ProjectPage.html">CS-313</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="shop.php" class="btn btn-inverse btn-lg">
-              <span class="glyphicon glyphicon-shopping-cart"></span></a></li>
+            <li><a href="#" class="btn btn-inverse btn-lg" onclick="submitForm()">
+          <span class="glyphicon glyphicon-shopping-cart"></span></a></li>
           </ul>
         </div>
       </div>
@@ -39,7 +38,7 @@
 
 <!--div class="img" onclick="changeDisplay()">
 </div-->
-
+<form class="" action="shop.php" method="post">
 <div class="container-fluid" id="shopItems">
   <div class="row">
     <div class="col-sm-6 col-centered text-center">
@@ -47,31 +46,30 @@
       <div class="desc">Behind the masculine bulk of Gundam Virtue
         lies the slender feminine form of Gundam Nadleeh.
         <br> $12.50 <br>
-        <form  action="shop.php" method="post">
-          <input type="button" onclick="alert('SOLD!')"
-          value="buy" name="1" >
-        </form>
+          <input type="checkbox" name="Item[]" value="10"> Buy
         </div>
     </div>
     <div class="col-sm-6 col-centered text-center">
       <img class="shop-list" src="imgS/2.jpg" alt="2">
       <div class="desc">A 3rd-Generation Gundam, Exia is designed to be a close
         quarters combat (CQC) type mobile suit
-        <br>$15.66</div>
-    </div>
+        <br>$15.66 <br>
+          <input type="checkbox" name="Item[]" value="2"> Buy</div>
   </div>
   <div class="row">
     <div class="col-sm-6 col-centered text-center">
       <img class="shop-list" src="imgS/3.jpg" alt="3">
       <div class="desc">The Transient Gundam's design is based on the various GN
          Drive-equipped mobile suits appearing in Mobile Suit Gundam 00.
-         <br> $23.99</div>
+         <br> $23.99<br>
+           <input type="checkbox" name="Item[]" value="3"> Buy</div>
     </div>
     <div class="col-sm-6 col-centered text-center">
       <img class="shop-list" src="imgS/4.jpg" alt="4">
       <div class="desc">The Transient Gundam Glacier has impeccable particle
         control, and specializes in freezing capabilities.
-      <br>$23.99</div>
+      <br>$23.99<br>
+        <input type="checkbox" name="Item[]" value="4"> Buy</div>
     </div>
   </div>
   <div class="row">
@@ -79,16 +77,21 @@
       <img class="shop-list" src="imgS/7.jpg" alt="7">
       <div class="desc">The damaged Gundam Kimaris Trooper was brought to the
         Outer Lunar Orbit Joint Fleet and reborn as Vidar
-      <br>$18.50</div>
+      <br>$18.50<br>
+        <input type="checkbox" name="Item[]" value="7"> Buy</div>
     </div>
     <div class="col-sm-6 col-centered text-center">
       <img class="shop-list" src="imgS/5.jpg" alt="5">
       <div class="desc">The Gundam Vidar was retrofitted into the Gundam Kimaris
          Vidar, reclaiming the name Kimaris
-       <br>$23.99</div>
+       <br>$23.99<br>
+         <input type="checkbox" name="Item[]" value="5"> Buy <br>
+       <input type="submit" value="buy" style="visibility: hidden;" id="submit"></div>
     </div>
   </div>
 </div>
+</div>
+</form>
 
 
   </body>
