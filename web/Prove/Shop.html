@@ -29,7 +29,8 @@
             <li><a href="../CS313ProjectPage.html">CS-313</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#" class="btn btn-inverse btn-lg">
+            <li>
+              <a href="shop.php" class="btn btn-inverse btn-lg">
               <span class="glyphicon glyphicon-shopping-cart"></span></a></li>
           </ul>
         </div>
@@ -46,7 +47,11 @@
       <div class="desc">Behind the masculine bulk of Gundam Virtue
         lies the slender feminine form of Gundam Nadleeh.
         <br> $12.50 <br>
-        <button type="button" onclick="alert('Hello World!')">Click Me!</button></div>
+        <form  action="shop.php" method="post">
+          <input type="button" onclick="alert('SOLD!')"
+          value="buy" name="1" >
+        </form>
+        </div>
     </div>
     <div class="col-sm-6 col-centered text-center">
       <img class="shop-list" src="imgS/2.jpg" alt="2">

@@ -6,6 +6,7 @@
   </head>
   <body>
     <?php
+    echo $_POST["1"];
      ?>
   </body>
 </html>
