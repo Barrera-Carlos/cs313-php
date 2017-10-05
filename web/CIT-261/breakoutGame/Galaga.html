@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>galaga</title>
+    <style media="screen">
+      *{padding: 0; margin: 0;}
+      canvas{background: #000; display: block; margin: 0 auto;}
+    </style>
+  </head>
+  <body>
+    <!--canvas display-->
+    <canvas id="space" width="300" height="300"></canvas>
+    <!--game logic-->
+    <script type="text/javascript">
+
+      var canvas = document.getElementById("space");
+      var ctx = canvas.getContext("2d");
+      var xT = canvas.width/2;
+      var yT = canvas.height-20;
+      //cordinates of ship
+      var RightXT = xT+20;
+      var LeftXT = xT-20;
+      var TCornerHight = yT+20;
+      //bullet var
+      var bullets = [];
+      var numOfBullets = 25;
+      var canfire = 0;
+      //brick variables
+      var brickRowCount = 3;
+      var brickColumnCount = 1;
+      var brickWidth = 40;
+      var brickHeight = 20;
+      var brickPadding = 10;
+      var brickOffsetTop = 30;
+      var brickOffsetLeft = canvas.width/2.6;
+      //brick array creation
+      var bricks = [];
+      for(c=0; c<brickColumnCount; c++) {
+        bricks[c] = [];
+        for(r=0; r<brickRowCount; r++) {
+            bricks[c][r] = { x: (c*(brickWidth+brickPadding))+brickOffsetLeft,
+               y: (r*(brickHeight+brickPadding))+brickOffsetTop, notBroken: 1,
+             leftOrRight:true}
+          }
+        }
+
+      var rightPressed = false;
+      var leftPressed = false;
+      var spacePressed = false;
+
+      document.addEventListener("keydown", keyDownHandler, false);
+      document.addEventListener("keyup", keyUpHandler, false);
+
+      function keyDownHandler(e) {
+          if(e.keyCode == 39) {
+              rightPressed = true;
+          }
+          else if(e.keyCode == 37) {
+              leftPressed = true;
+          }
+          else if (e.keyCode == 32) {
+            spacePressed = true;
+          }
+      }
+      function keyUpHandler(e) {
+        if (e.keyCode == 32) {
+          spacePressed = false;
+        }
+        if(e.keyCode == 39) {
+          rightPressed = false;
+        }
+        else if(e.keyCode == 37) {
+          leftPressed = false;
+        }
+
+      }
+
+      function drawTriangle(){
+        ctx.beginPath();
+        ctx.moveTo(xT,yT);
+        ctx.lineTo(RightXT,TCornerHight);
+        ctx.lineTo(LeftXT,TCornerHight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+      }
+
+      function drawBullet(){
+        if(bullets.length > 0){
+          for(var i=0; i < bullets.length; i++)
+          {
+            if (bullets[i].alive) {
+              ctx.beginPath();
+              ctx.arc(bullets[i].xLocation,bullets[i].yLocation, 4, 0, Math.PI*2);
+              ctx.fillStyle = "#0095DD";
+              ctx.fill();
+              ctx.closePath();
+            }
+          }
+        }
+      }
+
+      function drawBricks() {
+          for(c=0; c<brickColumnCount; c++) {
+            for(r=0; r<brickRowCount; r++) {
+              if(bricks[c][r].notBroken == 1) {
+                  ctx.beginPath();
+                  ctx.rect(bricks[c][r].x, bricks[c][r].y, brickWidth, brickHeight);
+                  ctx.fillStyle = "#0095DD";
+                  ctx.fill();
+                  ctx.closePath();
+              }
+            }
+          }
+        }
+
+      function createBullet(){
+        if (spacePressed && numOfBullets > 0 &&canfire > 10) {
+          var bullet = {
+            bullNum:numOfBullets,
+            xLocation: xT,
+            yLocation: yT-5 ,
+            alive: true,
+            kill: function(){
+              this.alive = false;
+            }
+          }
+          bullets.push(bullet);
+          numOfBullets -=1
+          canfire = 0;
+        }
+        if(canfire < 15){
+         canfire += 1;
+       }
+      }
+
+      function move(){
+        if(rightPressed && RightXT < canvas.width){
+          RightXT += 7;
+          LeftXT += 7;
+          xT += 7;
+        }
+        else if (leftPressed && LeftXT > 0) {
+          RightXT -= 7;
+          LeftXT -= 7;
+          xT -= 7;
+        }
+        for(var i=0; i < bullets.length; i++)
+        {
+          if (bullets[i].alive) {
+            bullets[i].yLocation -= 1;
+          }
+        }
+        for(c=0; c<brickColumnCount; c++) {
+          for(r=0; r<brickRowCount; r++) {
+            switch (r) {
+              case 2:
+              if (bricks[c][r].notBroken && bricks[c][r].leftOrRight) {
+                if (bricks[c][r].x < 0) {
+                  bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                }
+                bricks[c][r].x -= 2;
+              }else if (bricks[c][r].notBroken && !bricks[c][r].leftOrRight) {
+                if (bricks[c][r].x + brickWidth > canvas.width) {
+                  bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                }
+                bricks[c][r].x +=2;
+              }
+                break;
+                case 1:
+                if (bricks[c][r].notBroken && bricks[c][r].leftOrRight) {
+                  if (bricks[c][r].x + brickWidth > canvas.width) {
+                    bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                  }
+                  bricks[c][r].x += 3;
+                }else if (bricks[c][r].notBroken && !bricks[c][r].leftOrRight) {
+                  if (bricks[c][r].x < 0) {
+                    bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                  }
+                  bricks[c][r].x -=3;
+                }
+                  break;
+              default:
+              if (bricks[c][r].notBroken && bricks[c][r].leftOrRight) {
+                if (bricks[c][r].x < 0) {
+                  bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                }
+                bricks[c][r].x -= 4;
+              }else if (bricks[c][r].notBroken && !bricks[c][r].leftOrRight) {
+                if (bricks[c][r].x + brickWidth > canvas.width) {
+                  bricks[c][r].leftOrRight = !bricks[c][r].leftOrRight;
+                }
+                bricks[c][r].x +=4;
+              }
+
+            }
+          }
+        }
+      }
+
+      function draw(){
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        drawTriangle();
+        createBullet();
+        drawBullet();
+        drawBricks();
+        move();
+      }
+      setInterval(draw,10);
+    </script>
+  </body>
+</html>
