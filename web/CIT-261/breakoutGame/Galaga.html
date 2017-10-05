@@ -41,7 +41,7 @@
         for(r=0; r<brickRowCount; r++) {
             bricks[c][r] = { x: (c*(brickWidth+brickPadding))+brickOffsetLeft,
                y: (r*(brickHeight+brickPadding))+brickOffsetTop, notBroken: 1,
-             leftOrRight:true}
+             leftOrRight:true, hearts: 3, imune: false}
           }
         }
 
@@ -106,7 +106,21 @@
               if(bricks[c][r].notBroken == 1) {
                   ctx.beginPath();
                   ctx.rect(bricks[c][r].x, bricks[c][r].y, brickWidth, brickHeight);
-                  ctx.fillStyle = "#0095DD";
+                  switch (bricks[c][r].hearts) {
+                    case 3:
+                      ctx.fillStyle = "#0000ff";
+                      break;
+                    case 2:
+                      ctx.fillStyle = "#3399ff";
+                      break;
+                    case 1:
+                      ctx.fillStyle = "#66ffff";
+                      break;
+                    default:
+                    ctx.fillStyle = "#99ffcc";
+
+                  }
+
                   ctx.fill();
                   ctx.closePath();
               }
@@ -132,6 +146,29 @@
         if(canfire < 15){
          canfire += 1;
        }
+      }
+
+      function collision(){
+        for (c=0; c < brickColumnCount; c++){
+          for ( r=0; r < brickRowCount; r++) {
+            var b = bricks[c][r];
+            if(b.notBroken == 1) {
+              for(i=0; i < bullets.length; ++i){
+                if(bullets[i].alive && b.notBroken)
+                {
+                  var bull = bullets[i]
+                  if(bull.xLocation > b.x && bull.xLocation < b.x+brickWidth && bull.yLocation > b.y && bull.yLocation < b.y+brickHeight) {
+                    if (b.hearts <= 0) {
+                      b.notBroken = 0;
+                    }
+                    bull.alive = false;
+                    b.hearts -= 1;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
 
       function move(){
@@ -204,6 +241,7 @@
         createBullet();
         drawBullet();
         drawBricks();
+        collision();
         move();
       }
       setInterval(draw,10);
