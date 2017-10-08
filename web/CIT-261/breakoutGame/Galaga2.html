@@ -3,15 +3,30 @@
   <head>
     <meta charset="utf-8">
     <title>galaga</title>
-    <style media="screen">
+    <link rel="stylesheet" href="Galaga2.css">
+    <!--style media="screen">
       *{padding: 0; margin: 0;}
       canvas{background: #000; display: block; margin: 0 auto;}
-    </style>
+    </style-->
   </head>
-  <body onload="start()">
+  <body>
     <!--canvas display-->
     <canvas id="space" width="300" height="300"></canvas>
     <!--game logic-->
-    <script type="text/javascript" src="Galaga2.js"></script>
+    <script type="text/javascript" src="gameLogic.js"></script>
+
+    <!-- instructional video -->
+    <div class="video">
+      <video width="320" height="240" controls id="showMe">
+        <source src="instruction.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div id="instructions">
+    <button type="button" name="button" onclick="show()">Instructions</button>
+    </div>
+
+
+
+
   </body>
 </html>
