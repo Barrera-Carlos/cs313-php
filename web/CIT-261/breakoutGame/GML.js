@@ -291,10 +291,10 @@ function draw(){
   move();
 
     if (checkBricksLife() && numOfBullets <= 0) {
-      document.body.style.backgroundImage = "url(black.JPG)";
+      document.body.style.backgroundImage = "url(black.jpg)";
     }
     else if (!checkBricksLife() && numOfBullets >= 0) {
-      document.body.style.backgroundImage = "url(won.JPG)";
+      document.body.style.backgroundImage = "url(won.jpg)";
     }
 }
 
