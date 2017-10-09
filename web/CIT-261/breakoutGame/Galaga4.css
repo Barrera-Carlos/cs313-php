@@ -10,6 +10,7 @@ canvas {
     left: 0;
     right: 0;
     background: #000;
+
 }
 
 video{
@@ -18,13 +19,17 @@ video{
   visibility: hidden;
 }
 
-.video .show{
+.show {
   visibility: visible;
+}
+
+.hide{
+  visibility: hidden;
 }
 
 .instructions{
   text-align: center;
-  padding-top: 450px;
+
 }
 
 body{

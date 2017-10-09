@@ -32,11 +32,13 @@ var spacePressed = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-//functions not part of canvas////////////////////
+//functions to controll display////////////////////
 
 function show(){
   var video = document.getElementById("showMe");
     video.classList.toggle("show");
+  var game = document.getElementById("space");
+  game.classList.toggle("hide");
 }
 
 /////////////////////////////////////////////////
