@@ -55,7 +55,7 @@ function start(){
     create = false;
   }
 
-
+//Code obtained from: https://www.w3schools.com/graphics/game_sound.asp
 function sound(src){
   this.sound = document.createElement("audio");
   this.sound.src = src;
