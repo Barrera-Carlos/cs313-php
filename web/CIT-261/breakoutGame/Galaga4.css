@@ -1,0 +1,37 @@
+canvas {
+    padding: 0;
+    margin: auto;
+    display: block;
+    position: fixed;
+    top: 0;
+    width: 600px;
+    height: 400px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000;
+
+}
+
+video{
+  display: block;
+  margin: 0 auto;
+  visibility: hidden;
+}
+
+.show {
+  visibility: visible;
+}
+
+.hide{
+  visibility: hidden;
+}
+
+.instructions{
+  text-align: center;
+
+}
+
+body{
+  background-image: url("tig2.jpg");
+}
