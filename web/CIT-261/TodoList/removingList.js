@@ -2,7 +2,7 @@ var parent;
 
 
 /*//////////////////////////////////////////////////////////////////////
-deletes localy stored string
+deletes locally stored string
 /////////////////////////////////////////////////////////////////////*/
 function deleteStorage(){
   localStorage.removeItem("listArr");
@@ -21,20 +21,19 @@ function setStoredArray(arr){
 }
 
 /*//////////////////////////////////////////////////////////////////////
-returns a localy stored string .
+returns a locally stored string .
 /////////////////////////////////////////////////////////////////////*/
 function getStoredString(){
-  var localStorageString = localStorage.listArr;
-  return localStorageString
+  return localStorage.listArr;
 }
 
 /*//////////////////////////////////////////////////////////////////////
-will add a new string to the localy stored "array"
+will add a new string to the locally stored "array"
 /////////////////////////////////////////////////////////////////////*/
 function setNewItem(string){
   var storedString = getStoredString()
   var localArr;
-  if(storedString != undefined){
+  if(storedString !== undefined){
     localArr = JSON.parse(storedString);
     localArr.push(string);
     setStoredArray(localArr);
@@ -47,7 +46,7 @@ function setNewItem(string){
 }
 
 /*//////////////////////////////////////////////////////////////////////
-will remove an existing item from the licaly stored "array"
+will remove an existing item from the locally stored "array"
 /////////////////////////////////////////////////////////////////////*/
 function removeItem(string){
   //removes teh span element from the string
@@ -58,10 +57,10 @@ function removeItem(string){
   var newArr = [];
   var storedString = getStoredString();
 
-  if(storedString != undefined){
+  if(storedString !== undefined){
     savedArr = JSON.parse(storedString);
     for(i = 0; i < savedArr.length; i++){
-      if(newString != savedArr[i]){
+      if(newString !== savedArr[i]){
         newArr.push(savedArr[i]);
       }
     }
@@ -70,7 +69,7 @@ function removeItem(string){
     alert("string does not exist")
   }
 
-/* creates a new local storage, or deletes the past storage if theres nothing
+/* creates a new local storage, or deletes the past storage if there's nothing
 new to save */
   if(newArr.length >= 1){
     setStoredArray(newArr);
@@ -83,7 +82,7 @@ new to save */
 
 /*//////////////////////////////////////////////////////////////////////
 appends a span element to a parent li element which will
-remove the element vlue from the localy stored array and makes
+remove the element value from the locally stored array and makes
 the parent element style none.
 /////////////////////////////////////////////////////////////////////*/
 function createButton(newLI){
@@ -96,13 +95,13 @@ function createButton(newLI){
     var btnParent = this.parentElement;
     removeItem(btnParent.innerHTML);
     btnParent.style.display = "none";
-  })
+  });
   newLI.appendChild(btn);
 }
 
 
 /*//////////////////////////////////////////////////////////////////////
-if there's a localy stored "array" it will fill the list with the
+if there's a locally stored "array" it will fill the list with the
 array values.
 /////////////////////////////////////////////////////////////////////*/
 function createList(jsonArr){
@@ -119,8 +118,8 @@ function createList(jsonArr){
 }
 
 /*//////////////////////////////////////////////////////////////////////
-will set new items; by creating new li elemts and filling them with
-the form value, and saving the vale into a localy stored array
+will set new items; by creating new li elements and filling them with
+the form value, and saving the vale into a locally stored array
 /////////////////////////////////////////////////////////////////////*/
 function setItem(){
   var newLI = document.createElement("li");
@@ -140,13 +139,13 @@ function setItem(){
 }
 
 /*//////////////////////////////////////////////////////////////////////
-gives the parent var a value, and looks for localy stored arrays
+gives the parent var a value, and looks for locally stored arrays
 /////////////////////////////////////////////////////////////////////*/
 function setUp(){
   parent = document.getElementById("myList");
 
   var storedString = getStoredString();
-  if(storedString != undefined){
+  if(storedString !== undefined){
     var localArr = JSON.parse(storedString);
     createList(localArr);
   }
