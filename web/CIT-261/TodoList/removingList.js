@@ -1,6 +1,5 @@
 var parent;
 
-
 /*//////////////////////////////////////////////////////////////////////
 deletes locally stored string
 /////////////////////////////////////////////////////////////////////*/
@@ -24,7 +23,10 @@ function setStoredArray(arr){
 returns a locally stored string .
 /////////////////////////////////////////////////////////////////////*/
 function getStoredString(){
-  return localStorage.listArr;
+    if(localStorage.getItem("listArr"))
+        return localStorage.listArr;
+    else
+        return null;
 }
 
 /*//////////////////////////////////////////////////////////////////////
@@ -33,7 +35,7 @@ will add a new string to the locally stored "array"
 function setNewItem(string){
   var storedString = getStoredString()
   var localArr;
-  if(storedString !== undefined){
+  if(storedString !== null){
     localArr = JSON.parse(storedString);
     localArr.push(string);
     setStoredArray(localArr);
@@ -57,7 +59,7 @@ function removeItem(string){
   var newArr = [];
   var storedString = getStoredString();
 
-  if(storedString !== undefined){
+  if(storedString !== null){
     savedArr = JSON.parse(storedString);
     for(i = 0; i < savedArr.length; i++){
       if(newString !== savedArr[i]){
@@ -139,13 +141,43 @@ function setItem(){
 }
 
 /*//////////////////////////////////////////////////////////////////////
+loads a list of items you attempt to accomplish on the dayle
+ //////////////////////////////////////////////////////////////////////*/
+function loadDaily() {
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function () {
+        if(this.readyState === 4 && this.status === 200){
+            var xmlArr = JSON.parse(this.responseText);
+            createList(xmlArr);
+
+            var jsonString = getStoredString();
+            if(jsonString !== null){
+                alert("past string exist");
+                var savedArr = JSON.parse(jsonString);
+                var newArr = savedArr.concat(xmlArr);
+                setStoredArray(newArr);
+            }
+            else{
+                alert("past string does not exist");
+                setStoredArray(xmlArr);
+            }
+
+        }
+    };
+
+    request.open("GET","savedList.txt",true);
+    request.send();
+}
+
+/*//////////////////////////////////////////////////////////////////////
 gives the parent var a value, and looks for locally stored arrays
 /////////////////////////////////////////////////////////////////////*/
 function setUp(){
   parent = document.getElementById("myList");
 
   var storedString = getStoredString();
-  if(storedString !== undefined){
+  if(storedString !== null){
     var localArr = JSON.parse(storedString);
     createList(localArr);
   }
