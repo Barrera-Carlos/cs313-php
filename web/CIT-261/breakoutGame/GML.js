@@ -32,7 +32,9 @@ var spacePressed = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-//functions to controll display////////////////////
+/*///////////////////////////////////////////////////////////
+Show controls when the canvas and video tag are visible
+//////////////////////////////////////////////////////////*/
 
 function show(){
   var video = document.getElementById("showMe");
@@ -41,8 +43,11 @@ function show(){
   game.classList.toggle("hide");
 }
 
-/////////////////////////////////////////////////
 
+/*///////////////////////////////////////////////////////////
+// start creates the brick matrix and calls the
+// Audio constructor
+//////////////////////////////////////////////////////////*/
 function start(){
   for(c=0; c<brickColumnCount; c++) {
     bricks[c] = [];
@@ -51,23 +56,25 @@ function start(){
         bricks[c][r] = newbrick;
       }
     }
-    bulletSound = new sound("bang.m4a");
+    bulletSound = new bang("bang.m4a");
     create = false;
   }
 
-//Code obtained from: https://www.w3schools.com/graphics/game_sound.asp
-function sound(src){
-  this.sound = document.createElement("audio");
-  this.sound.src = src;
-  this.sound.setAttribute("preload", "auto");
-  this.sound.setAttribute("controls", "none");
-  this.sound.style.display = "none";
-  document.body.appendChild(this.sound);
+/*///////////////////////////////////////////////////////////
+// bang() is the Audio constroctor.
+//////////////////////////////////////////////////////////*/
+function bang(soundFile){
+    //create an audio element
+  this.bang = document.createElement("audio");
+  //audio file src assigned to the sound file
+  this.bang.src = soundFile;
+  //audio atribute prload auto: the browser "should"
+    //load the entire file when page loads
+  this.bang.setAttribute("preload", "auto");
+  this.bang.style.display = "none";
+  document.body.appendChild(this.bang);
   this.play = function(){
-      this.sound.play();
-  }
-  this.stop = function(){
-      this.sound.pause();
+      this.bang.play();
   }
 }
 
@@ -119,6 +126,9 @@ function drawBullet(){
   }
 }
 
+/*///////////////////////////////////////////////////////////
+// checkBricksLife() checks if any brick is alive
+//////////////////////////////////////////////////////////*/
 function checkBricksLife(){
   var brickLife0 = bricks[0][0].alive
   var brickLife1 = bricks[0][1].alive
@@ -162,7 +172,9 @@ function drawBricks() {
     }
   }
 
-//bullet constructor
+/*///////////////////////////////////////////////////////////
+// Bullet():bullet constructor
+//////////////////////////////////////////////////////////*/
 function Bullet(xLocation,yLocation,alive){
 
     this.xLocation = xLocation;
@@ -173,14 +185,20 @@ function Bullet(xLocation,yLocation,alive){
     }
 }
 
-  //brick constructor
+/*///////////////////////////////////////////////////////////
+// Bullet():bullet constructor
+//////////////////////////////////////////////////////////*/
 function brick(x,y,alive){
+    //brick inherites form the bullet prototype chain
   Bullet.call(this, x, y, alive);
   this.leftOrRight = true;
   this.hearts = 3;
   this.imune = false;
 }
 
+/*///////////////////////////////////////////////////////////
+// fireBullet() calls the bullet constructor
+//////////////////////////////////////////////////////////*/
 function fireBullet(){
   if (spacePressed && numOfBullets > 0 &&canfire > 100) {
       var alive = 1;
@@ -195,6 +213,10 @@ function fireBullet(){
  }
 }
 
+/*///////////////////////////////////////////////////////////
+// collision() checks if a bullet had made "contact"
+// with a brick
+//////////////////////////////////////////////////////////*/
 function collision(){
   for (c=0; c < brickColumnCount; c++){
     for ( r=0; r < brickRowCount; r++) {
@@ -218,6 +240,11 @@ function collision(){
   }
 }
 
+/*///////////////////////////////////////////////////////////
+// move(): changes the properti value of the bullet and
+// and brick objects and the cordinate variables of the
+// triangle ship
+//////////////////////////////////////////////////////////*/
 function move(){
   if(rightPressed && RightXT < canvas.width){
     RightXT += 7;
@@ -282,6 +309,9 @@ function move(){
   }
 }
 
+/*///////////////////////////////////////////////////////////
+// draw() is the game loop
+//////////////////////////////////////////////////////////*/
 function draw(){
   if (create){start()}
   ctx.clearRect(0,0,canvas.width, canvas.height);
@@ -292,6 +322,7 @@ function draw(){
   collision();
   move();
 
+    //the if statement will change the background img at the end of the game
     if (checkBricksLife() && numOfBullets <= 0) {
       document.body.style.backgroundImage = "url(black.jpg)";
     }
@@ -300,4 +331,7 @@ function draw(){
     }
 }
 
+/*///////////////////////////////////////////////////////////
+// setInterval() calls the draw function every 10 milliseconds
+//////////////////////////////////////////////////////////*/
 setInterval(draw,10);
