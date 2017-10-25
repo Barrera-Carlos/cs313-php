@@ -1,0 +1,7 @@
+body{
+    background-image: url("white-wallpaper13.jpg");
+}
+
+#back{
+    transform: rotateY(0deg);
+}
