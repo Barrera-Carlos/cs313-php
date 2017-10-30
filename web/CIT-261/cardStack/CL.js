@@ -49,7 +49,7 @@ function Card(faceImg, elm, zIndexNumber) {
             this.elm.style.transform = "rotateY(" + this.angle + "deg)";
             if (!this.flipingBack) {
                 this.angle += 1;
-                if (this.angle >= 90) {
+                if (this.angle === 90) {
                     this.changeCardImg();
                 }
             }
