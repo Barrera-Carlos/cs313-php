@@ -2,11 +2,24 @@
 var listOnScreen;
 var MAIN_LIST = "MAIN_LIST";
 var parent;
+var returnBTN;
 
 /*/////////////////////////////////////////////////////
-// backButton. reverts the list to the mainList
+// goBack. reverts the list to the mainList
 /////////////////////////////////////////////////////*/
+function goBack() {
+    if(listOnScreen !== MAIN_LIST) {
+        listOnScreen = MAIN_LIST;
+        clearList();
+        var storedString = loadLocalStorage(listOnScreen);
+        if (storedString !== null) {
+            var arr = JSON.parse(storedString);
+            loadList(arr);
+        }
 
+        returnBTN.style.visibility = "hidden";
+    }
+}
 
 /*/////////////////////////////////////////////////////
 // loadLocalStorage will return a string from local
@@ -120,6 +133,7 @@ function ITEM(nameOfItem, isMainList, hasBeenClicked) {
 function createListItem(listItem) {
 
     var listElm = document.createElement("LI");
+    listElm.setAttribute("id","listItem");
     var listItemText = document.createTextNode(listItem.nameOfItem);
     listElm.appendChild(listItemText);
 
@@ -134,6 +148,7 @@ function createListItem(listItem) {
             var thisELm = this;
             clearList();
             listOnScreen = thisELm.childNodes[0].nodeValue;
+            returnBTN.style.visibility = "visible";
             var storedString = loadLocalStorage(listOnScreen);
             if(storedString !== null){
                 var subArr = JSON.parse(storedString);
@@ -205,6 +220,8 @@ function setUp(){
 
     listOnScreen = MAIN_LIST;
     parent = document.getElementById("myList");
+    returnBTN = document.getElementById("return");
+    returnBTN.style.visibility = "hidden";
 
     var storedString = loadLocalStorage(listOnScreen);
     if(storedString !== null){
