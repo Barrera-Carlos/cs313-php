@@ -1,0 +1,37 @@
+body{
+    margin: 0;
+    background-image: url("back.jpg");
+}
+
+#myUL {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: dimgrey;
+}
+
+
+li{
+    display: inline;
+    color: white;
+    font-size: 28px;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#on{
+    background-color: darkgray;
+}
+
+.navBar:hover:not(#on){
+    background-color: #808080;
+}
+
+.aboutMe{
+    background-color: lightblue;
+    width: 300px;
+    border: 15px solid grey;
+    margin-left: 40%;
+    margin-top: 20%;
+}
