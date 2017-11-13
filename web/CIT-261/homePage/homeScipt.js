@@ -1,8 +1,14 @@
 function firstPage() {
 
+    var title = document.getElementById("on");
+    title.style.backgroundColor = "#ff3333";
+
     var elm = document.getElementsByClassName("navBar");
-    elm[0].style.display = 'block';
-    elm[1].parentNode.removeChild(elm[1]);
+    for(i = 0; i < elm.length; i++){
+        elm[i].style.display = "block";
+        if(elm[i] !== title)
+            elm[i].style.color = "black";
+    }
 
     var ul = document.getElementById("myUL");
     ul.style.overflow ="auto";
