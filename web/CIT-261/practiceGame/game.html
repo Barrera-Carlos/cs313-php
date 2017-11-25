@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="gameLogic.js"></script>
+    <style>
+        
+        body{
+            background-image: url("white-wallpaper13.jpg");
+        }
+
+        #felt {
+            position: relative;
+            margin: 0 0 0 200px;
+        }
+
+    </style>
+</head>
+<body onload="setDeck()">
+
+<div id="stage">
+    <div id="felt">
+        <div id="card_0"><img onclick="cardClick(0);" src="cardImg/back2.png"></div>
+        <div id="card_1"><img onclick="cardClick(1);" src="cardImg/back2.png"></div>
+        <div id="card_2"><img onclick="cardClick(2);" src="cardImg/back2.png"></div>
+        <div id="card_3"><img onclick="cardClick(3);" src="cardImg/back2.png"></div>
+        <div id="card_4"><img onclick="cardClick(4);" src="cardImg/back2.png"></div>
+        <div id="card_5"><img onclick="cardClick(5);" src="cardImg/back2.png"></div>
+        <div id="card_6"><img onclick="cardClick(6);" src="cardImg/back2.png"></div>
+        <div id="card_7"><img onclick="cardClick(7);" src="cardImg/back2.png"></div>
+        <div id="card_8"><img onclick="cardClick(8);" src="cardImg/back2.png"></div>
+        <div id="card_9"><img onclick="cardClick(9);" src="cardImg/back2.png"></div>
+        <div id="card_10"><img onclick="cardClick(10);" src="cardImg/back2.png"></div>
+        <div id="card_11"><img onclick="cardClick(11);" src="cardImg/back2.png"></div>
+        <div id="card_12"><img onclick="cardClick(12);" src="cardImg/back2.png"></div>
+        <div id="card_13"><img onclick="cardClick(13);" src="cardImg/back2.png"></div>
+        <div id="card_14"><img onclick="cardClick(14);" src="cardImg/back2.png"></div>
+        <div id="card_15"><img onclick="cardClick(15);" src="cardImg/back2.png"></div>
+    </div>
+</div>
+
+<button onclick="restGame()">Let's Play again!</button>
+</body>
+</html>
