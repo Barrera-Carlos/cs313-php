@@ -1,6 +1,6 @@
 var Deck = [];
-var succesfulFlips = 0;
-//var values = [2,3,4,5,6,7,8,9,2,3,4,5,6,7,8,9];
+var successFullFlips = 0;
+var backDesign = "cardImg/back2.png";
 var cardFace = [
     "cardImg/2.png",
     "cardImg/3.png",
@@ -50,7 +50,7 @@ function shuffleLocation() {
 function stackDeck(DeckIndex) {
     if(DeckIndex < Deck.length){
         Deck[DeckIndex].elm.style.left = "-140px";
-        Deck[DeckIndex].elm.style.top = "100px";
+        Deck[DeckIndex].elm.style.top = "80px";
         Deck[DeckIndex].reset();
         Deck[DeckIndex].faceHasFlipped = true;
 
@@ -72,53 +72,68 @@ function cardClick(idNum){
             if(t.count === idNum)
                 firstCard = t;
         });
-        var firstTimer = setInterval(function () {
-            firstCard.showFace(firstTimer);
-        });
+        if(!firstCard.faceHasFlipped){
+            var firstTimer = setInterval(function () {
+                firstCard.showFace(firstTimer);
+            });
+        }
+        else{
+            alert("this card has been flipped");
+            firstCard = null;
+        }
+
     }
-    else if(secondCard === null){
+    else if(secondCard === null && idNum !== firstCard.count){
         Deck.forEach(function (t) {
             if(t.count === idNum)
                 secondCard = t;
         });
-        var secondTimer = setInterval(function () {
-            secondCard.showFace(secondTimer);
-        });
+        if(!secondCard.faceHasFlipped) {
+            var secondTimer = setInterval(function () {
+                secondCard.showFace(secondTimer);
+            });
 
-        setTimeout(function () {
-            if(secondCard.cardFace !== firstCard.cardFace)
-            {
-                var thirdTimer = setInterval(function () {
-                    firstCard.showBack(thirdTimer);
-                    if(firstCard.doneFlipping && firstCard.faceHasFlipped){
-                        firstCard.reset();
-                        firstCard = null;
-                    }
-
-
-                });
-                var forthTimer = setInterval(function () {
-                    secondCard.showBack(forthTimer);
-                    if(secondCard.doneFlipping && secondCard.faceHasFlipped){
-                        secondCard.reset();
-                        secondCard = null;
-                    }
+            setTimeout(function () {
+                if (secondCard.cardFace !== firstCard.cardFace) {
+                    var thirdTimer = setInterval(function () {
+                        firstCard.showBack(thirdTimer);
+                        if (firstCard.doneFlipping && firstCard.faceHasFlipped) {
+                            firstCard.reset();
+                            firstCard = null;
+                        }
 
 
-                });
-            }
-            else {
-                secondCard = null;
-                firstCard = null;
-                succesfulFlips += 1;
-                if(succesfulFlips === 8){
-                    var i = 0;
-                    stackDeck(i);
+                    });
+                    var forthTimer = setInterval(function () {
+                        secondCard.showBack(forthTimer);
+                        if (secondCard.doneFlipping && secondCard.faceHasFlipped) {
+                            secondCard.reset();
+                            secondCard = null;
+                        }
+
+
+                    });
                 }
-            }
-        },1000);
-
-
+                //if firstCard count === idNum the user has clicked the same card
+                else if (firstCard.count === idNum) {
+                    alert("please choose a different card");
+                }
+                else {
+                    secondCard = null;
+                    firstCard = null;
+                    successFullFlips += 1;
+                    if (successFullFlips === 8) {
+                        successFullFlips = 0;
+                        var deckIndex = 0;
+                        stackDeck(deckIndex);
+                    }
+                }
+            }, 1000);
+        }
+        else {
+            alert("this card has been flipped");
+            secondCard = null;
+        }
     }
 }
 
@@ -191,7 +206,7 @@ function Card(xLocation, yLocation, count) {
                 this.angle += 1;
                 if(this.angle >= 90) {
                     this.hasItFlipped = true;
-                    this.elm.firstElementChild.src = "cardImg/back2.png";
+                    this.elm.firstElementChild.src = backDesign;
                 }
             }
             else if(this.angle > 0 && !this.doneFlipping) {
@@ -212,6 +227,16 @@ function Card(xLocation, yLocation, count) {
 
 }
 
+
+/*
+
+set theme will change the suit of the deck and will change
+the back design.
+
+function setTheme() {
+
+}*/
+
 function setDeck() {
     var count = 0;
 
@@ -230,6 +255,7 @@ function setDeck() {
 function restGame(){
     var shuffled = shuffleLocation();
     for( var i = 0; i < shuffled.length; i++){
+        Deck[i].reset();
         Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
     }
 }
