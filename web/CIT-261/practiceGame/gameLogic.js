@@ -332,9 +332,11 @@ function loadStats(facebookResponse) {
     });
 
     if(playerStats !== null){
+        conole.log("LoadStats function is activating playerStats !== null");
         displayPlayerStats(playerStats);
     }
     else {
+        conole.log("LoadStats function is activating playerStats === null");
         playerStats = new Stats(0,0,0,facebookResponse.name);
         displayPlayerStats(playerStats);
     }
