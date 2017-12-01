@@ -310,7 +310,7 @@ function restGame(){
 }
 
 function displayPlayerStats(player){
-    document.getElementById("stats").innerHTML = String(player.name);
+    document.getElementById("stats").innerHTML = player.name;
 }
 
 function loadStats(facebookResponse) {
@@ -337,7 +337,7 @@ function loadStats(facebookResponse) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,facebookResponse.name);
+        playerStats = new Stats(0,0,0,"carlos");
         displayPlayerStats(playerStats);
     }
 
