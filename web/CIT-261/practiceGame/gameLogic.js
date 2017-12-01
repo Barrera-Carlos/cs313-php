@@ -326,7 +326,7 @@ function loadStats(response) {
     xhttp.send();
 
     allUserStats.forEach(function (t) {
-        if(t.name === response.name){
+        if(t.name === response.userID){
             playerStats = t;
         }
     });
@@ -337,7 +337,7 @@ function loadStats(response) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,response.name);
+        playerStats = new Stats(0,0,0,response.userID);
         displayPlayerStats(playerStats);
     }
 
