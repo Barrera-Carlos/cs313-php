@@ -192,11 +192,11 @@ function Card(xLocation, yLocation, count) {
 
 }
 
-function Stats(clicks, time, totalGames, ID){
+function Stats(clicks, time, totalGames, name){
     this.clicks = clicks;
     this.time = time;
     this.totalGames = totalGames;
-    this.ID = ID;
+    this.name = name;
 }
 
 function stackDeck(DeckIndex) {
@@ -310,7 +310,7 @@ function restGame(){
 }
 
 function displayPlayerStats(player){
-    document.getElementById("stats").innerHTML = String(player.ID);
+    document.getElementById("stats").innerHTML = String(player.name);
 }
 
 function loadStats(facebookResponse) {
@@ -326,7 +326,7 @@ function loadStats(facebookResponse) {
     xhttp.send();
 
     allUserStats.forEach(function (t) {
-        if(t.ID === facebookResponse.userID){
+        if(t.name === facebookResponse.name){
             playerStats = t;
         }
     });
