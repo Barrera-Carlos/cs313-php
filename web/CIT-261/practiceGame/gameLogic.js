@@ -28,7 +28,7 @@ function checkLoginState() {
             loadStats(response)
         }
         else {
-            FB.login(function(response) {
+            /*FB.login(function(response) {
                 if (response.status === 'connected') {
                     // Logged into your app and Facebook.
                     alert("player has connected");
@@ -37,7 +37,8 @@ function checkLoginState() {
                     // The person is not logged into this app or we are unable to tell.
                     alert("player has not connected");
                 }
-            });
+            });*/
+            alert("not working");
         }
     });
 
