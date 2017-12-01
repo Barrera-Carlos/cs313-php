@@ -313,7 +313,7 @@ function displayPlayerStats(player){
     document.getElementById("stats").innerHTML = player.name;
 }
 
-function loadStats(facebookResponse) {
+function loadStats(response) {
     var allUserStats = [];
 
     var xhttp = new XMLHttpRequest();
@@ -326,7 +326,7 @@ function loadStats(facebookResponse) {
     xhttp.send();
 
     allUserStats.forEach(function (t) {
-        if(t.name === facebookResponse.name){
+        if(t.name === response.name){
             playerStats = t;
         }
     });
@@ -337,7 +337,7 @@ function loadStats(facebookResponse) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,"carlos");
+        playerStats = new Stats(0,0,0,response.name);
         displayPlayerStats(playerStats);
     }
 
