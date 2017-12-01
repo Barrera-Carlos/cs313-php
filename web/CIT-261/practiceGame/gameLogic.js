@@ -316,7 +316,7 @@ function displayPlayerStats(player){
 function loadStats(facebookResponse) {
     var allUserStats = [];
 
-    /*var xhttp = new XMLHttpRequest();
+    var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
            allUserStats = JSON.stringify(this.responseText);
@@ -337,6 +337,6 @@ function loadStats(facebookResponse) {
     else {
         playerStats = new Stats(0,0,0,facebookResponse.name);
         displayPlayerStats(playerStats);
-    }*/
+    }
 
 }
