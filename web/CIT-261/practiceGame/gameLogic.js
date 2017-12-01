@@ -24,11 +24,11 @@ function statusChangeCallback(response) {
 function checkLoginState() {
 
     FB.getLoginStatus(function(response) {
-        if(response === 'connected'){
+        if(response.status === 'connected'){
             loadStats(response)
         }
         else {
-            /*FB.login(function(response) {
+            FB.login(function(response) {
                 if (response.status === 'connected') {
                     // Logged into your app and Facebook.
                     alert("player has connected");
@@ -37,8 +37,7 @@ function checkLoginState() {
                     // The person is not logged into this app or we are unable to tell.
                     alert("player has not connected");
                 }
-            });*/
-            alert("not working");
+            });
         }
     });
 
@@ -316,6 +315,7 @@ function displayPlayerStats(player){
 
 function loadStats(facebookResponse) {
     var allUserStats = [];
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
