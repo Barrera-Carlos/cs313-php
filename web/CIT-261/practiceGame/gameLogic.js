@@ -25,7 +25,7 @@ function checkLoginState() {
 
     FB.getLoginStatus(function(response) {
         if(response.status === 'connected'){
-            //loadStats(response)
+            loadStats(response)
         }
         else {
             FB.login(function(response) {
