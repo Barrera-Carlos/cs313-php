@@ -23,16 +23,25 @@ function statusChangeCallback(response) {
 // inform the user his game stats will not be stored.
 function checkLoginState() {
 
-    FB.login(function(response) {
-        if (response.status === 'connected') {
-            // Logged into your app and Facebook.
-            alert("player has connected");
+    FB.getLoginStatus(function(response) {
+        if(response === 'connected'){
             loadStats(response)
-        } else {
-            // The person is not logged into this app or we are unable to tell.
-            alert("player has not connected");
+        }
+        else {
+            FB.login(function(response) {
+                if (response.status === 'connected') {
+                    // Logged into your app and Facebook.
+                    alert("player has connected");
+                    loadStats(response)
+                } else {
+                    // The person is not logged into this app or we are unable to tell.
+                    alert("player has not connected");
+                }
+            });
         }
     });
+
+
 }
 
 // Here we run a very simple test of the Graph API after login is
@@ -59,7 +68,6 @@ var cardFace = [
     "cardImg/8.png",
     "cardImg/9.png"
 ];
-var allUserStats = [];
 var playerStats = null;
 
 var firstCard = null;
@@ -306,6 +314,7 @@ function displayPlayerStats(player){
 }
 
 function loadStats(facebookResponse) {
+    var allUserStats = [];
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
@@ -325,7 +334,7 @@ function loadStats(facebookResponse) {
         displayPlayerStats(playerStats);
     }
     else {
-        playerStats = new Stats(0,0,0,facebookResponse.userID);
+        playerStats = new Stats(0,0,0,facebookResponse.name);
         displayPlayerStats(playerStats);
     }
 
