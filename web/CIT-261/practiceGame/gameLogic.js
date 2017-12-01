@@ -15,8 +15,7 @@ function statusChangeCallback(response) {
         testAPI();
     } else {
         // The person is not logged into your app or we are unable to tell.
-        document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app to track your progress.';
+        alert("please log in so we can save your stats, no personal information will be stored")
     }
 }
 
@@ -31,7 +30,7 @@ function checkLoginState() {
             loadStats(response)
         } else {
             // The person is not logged into this app or we are unable to tell.
-            alert("player has was not connected");
+            alert("player has not connected");
         }
     });
 }
@@ -313,7 +312,7 @@ function loadStats(facebookResponse) {
            allUserStats = JSON.stringify(this.responseText);
         }
     };
-    xhttp.open("GET", "allUserStats.txt", true);
+    xhttp.open("GET", "playerStats.txt", true);
     xhttp.send();
 
     allUserStats.forEach(function (t) {
