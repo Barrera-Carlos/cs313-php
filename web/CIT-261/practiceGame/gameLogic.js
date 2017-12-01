@@ -63,7 +63,7 @@ var cardFace = [
     "cardImg/9.png"
 ];
 var allUserStats = [];
-var playerStats;
+var playerStats = null;
 
 var firstCard = null;
 var secondCard = null;
@@ -324,7 +324,7 @@ function loadStats(facebookResponse) {
         }
     });
 
-    if(playerStats !== undefined){
+    if(playerStats !== null){
         displayPlayerStats(playerStats);
     }
     else {
