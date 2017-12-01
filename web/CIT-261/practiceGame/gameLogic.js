@@ -1,6 +1,13 @@
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
+function Stats(clicks, time, totalGames, name){
+    this.clicks = clicks;
+    this.time = time;
+    this.totalGames = totalGames;
+    this.name = name;
+}
+
 
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
@@ -51,6 +58,40 @@ function testAPI() {
     FB.api('/me', function(response) {
         console.log('Successful login for: ' + response.name);
     });
+}
+
+function displayPlayerStats(player){
+    document.getElementById("stats").innerHTML = player.name;
+}
+
+function loadStats(response) {
+    var allUserStats = [];
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            allUserStats = JSON.stringify(this.responseText);
+        }
+    };
+    xhttp.open("GET", "playerStats.txt", true);
+    xhttp.send();
+
+    allUserStats.forEach(function (t) {
+        if(t.name === response.userID){
+            playerStats = t;
+        }
+    });
+
+    if(playerStats !== null){
+        console.log("LoadStats function is activating playerStats !== null");
+        displayPlayerStats(playerStats);
+    }
+    else {
+        console.log("LoadStats function is activating playerStats === null");
+        playerStats = new Stats(0,0,0,response.status);
+        displayPlayerStats(playerStats);
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -192,13 +233,6 @@ function Card(xLocation, yLocation, count) {
 
 }
 
-function Stats(clicks, time, totalGames, name){
-    this.clicks = clicks;
-    this.time = time;
-    this.totalGames = totalGames;
-    this.name = name;
-}
-
 function stackDeck(DeckIndex) {
     if(DeckIndex < Deck.length){
         Deck[DeckIndex].elm.style.left = "-140px";
@@ -307,38 +341,4 @@ function restGame(){
         Deck[i].reset();
         Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
     }
-}
-
-function displayPlayerStats(player){
-    document.getElementById("stats").innerHTML = player.name;
-}
-
-function loadStats(response) {
-    var allUserStats = [];
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-           allUserStats = JSON.stringify(this.responseText);
-        }
-    };
-    xhttp.open("GET", "playerStats.txt", true);
-    xhttp.send();
-
-    allUserStats.forEach(function (t) {
-        if(t.name === response.userID){
-            playerStats = t;
-        }
-    });
-
-    if(playerStats !== null){
-        console.log("LoadStats function is activating playerStats !== null");
-        displayPlayerStats(playerStats);
-    }
-    else {
-        console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,response.userID);
-        displayPlayerStats(playerStats);
-    }
-
 }
