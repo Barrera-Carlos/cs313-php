@@ -16,28 +16,25 @@ function statusChangeCallback(response) {
     } else {
         // The person is not logged into your app or we are unable to tell.
         document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
+            'into this app to track your progress.';
     }
 }
 
-// This function is called when someone finishes with the Login
-// Button.  See the onlogin handler attached to it in the sample
-// code below.
+// this function will load player stats if the player has logged in else it will
+// inform the user his game stats will not be stored.
 function checkLoginState() {
 
     FB.login(function(response) {
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
-            alert("player has connected")
+            alert("player has connected");
+            loadStats(response)
         } else {
             // The person is not logged into this app or we are unable to tell.
             alert("player has was not connected");
         }
     });
 }
-
-
-
 
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.
@@ -50,9 +47,6 @@ function testAPI() {
     });
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 
 
 var Deck = [];
@@ -68,6 +62,8 @@ var cardFace = [
     "cardImg/8.png",
     "cardImg/9.png"
 ];
+var allUserStats = [];
+var playerStats;
 
 var firstCard = null;
 var secondCard = null;
@@ -102,96 +98,6 @@ function shuffleLocation() {
         }
     }
      return shuffle(location);
-}
-
-function stackDeck(DeckIndex) {
-    if(DeckIndex < Deck.length){
-        Deck[DeckIndex].elm.style.left = "-140px";
-        Deck[DeckIndex].elm.style.top = "80px";
-        Deck[DeckIndex].reset();
-        Deck[DeckIndex].faceHasFlipped = true;
-
-        //card is not flipping because in Card.showBack faceHasFlipped needs to be true
-        //for the flipping to commence. but its set as false because of the reset.
-        var time = setInterval(function () {
-            Deck[DeckIndex].showBack(time);
-        });
-
-        console.log(Deck[DeckIndex].cardFace);
-        stackDeck(DeckIndex+1);
-    }
-}
-
-
-function cardClick(idNum){
-    if(firstCard === null){
-        Deck.forEach(function (t) {
-            if(t.count === idNum)
-                firstCard = t;
-        });
-        if(!firstCard.faceHasFlipped){
-            var firstTimer = setInterval(function () {
-                firstCard.showFace(firstTimer);
-            });
-        }
-        else{
-            alert("this card has been flipped");
-            firstCard = null;
-        }
-
-    }
-    else if(secondCard === null && idNum !== firstCard.count){
-        Deck.forEach(function (t) {
-            if(t.count === idNum)
-                secondCard = t;
-        });
-        if(!secondCard.faceHasFlipped) {
-            var secondTimer = setInterval(function () {
-                secondCard.showFace(secondTimer);
-            });
-
-            setTimeout(function () {
-                if (secondCard.cardFace !== firstCard.cardFace) {
-                    var thirdTimer = setInterval(function () {
-                        firstCard.showBack(thirdTimer);
-                        if (firstCard.doneFlipping && firstCard.faceHasFlipped) {
-                            firstCard.reset();
-                            firstCard = null;
-                        }
-
-
-                    });
-                    var forthTimer = setInterval(function () {
-                        secondCard.showBack(forthTimer);
-                        if (secondCard.doneFlipping && secondCard.faceHasFlipped) {
-                            secondCard.reset();
-                            secondCard = null;
-                        }
-
-
-                    });
-                }
-                //if firstCard count === idNum the user has clicked the same card
-                else if (firstCard.count === idNum) {
-                    alert("please choose a different card");
-                }
-                else {
-                    secondCard = null;
-                    firstCard = null;
-                    successFullFlips += 1;
-                    if (successFullFlips === 8) {
-                        successFullFlips = 0;
-                        var deckIndex = 0;
-                        stackDeck(deckIndex);
-                    }
-                }
-            }, 1000);
-        }
-        else {
-            alert("this card has been flipped");
-            secondCard = null;
-        }
-    }
 }
 
 function Coordinates(x,y) {
@@ -275,24 +181,107 @@ function Card(xLocation, yLocation, count) {
                     clearInterval(time);
                 }
             }
-            /*else {
-                this.doneFlipping = false;
-                this.hasItFlipped = false;
-            }*/
+
         }
     }
 
 }
 
+function Stats(clicks, time, totalGames, ID){
+    this.clicks = clicks;
+    this.time = time;
+    this.totalGames = totalGames;
+    this.ID = ID;
+}
 
-/*
+function stackDeck(DeckIndex) {
+    if(DeckIndex < Deck.length){
+        Deck[DeckIndex].elm.style.left = "-140px";
+        Deck[DeckIndex].elm.style.top = "80px";
+        Deck[DeckIndex].reset();
+        Deck[DeckIndex].faceHasFlipped = true;
 
-set theme will change the suit of the deck and will change
-the back design.
+        //card is not flipping because in Card.showBack faceHasFlipped needs to be true
+        //for the flipping to commence. but its set as false because of the reset.
+        var time = setInterval(function () {
+            Deck[DeckIndex].showBack(time);
+        });
 
-function setTheme() {
+        console.log(Deck[DeckIndex].cardFace);
+        stackDeck(DeckIndex+1);
+    }
+}
 
-}*/
+function cardClick(idNum){
+    if(firstCard === null){
+        Deck.forEach(function (t) {
+            if(t.count === idNum)
+                firstCard = t;
+        });
+        if(!firstCard.faceHasFlipped){
+            var firstTimer = setInterval(function () {
+                firstCard.showFace(firstTimer);
+            });
+        }
+        else{
+            alert("this card has been flipped");
+            firstCard = null;
+        }
+
+    }
+    else if(secondCard === null && idNum !== firstCard.count){
+        Deck.forEach(function (t) {
+            if(t.count === idNum)
+                secondCard = t;
+        });
+        if(!secondCard.faceHasFlipped) {
+            var secondTimer = setInterval(function () {
+                secondCard.showFace(secondTimer);
+            });
+
+            setTimeout(function () {
+                if (secondCard.cardFace !== firstCard.cardFace) {
+                    var thirdTimer = setInterval(function () {
+                        firstCard.showBack(thirdTimer);
+                        if (firstCard.doneFlipping && firstCard.faceHasFlipped) {
+                            firstCard.reset();
+                            firstCard = null;
+                        }
+
+
+                    });
+                    var forthTimer = setInterval(function () {
+                        secondCard.showBack(forthTimer);
+                        if (secondCard.doneFlipping && secondCard.faceHasFlipped) {
+                            secondCard.reset();
+                            secondCard = null;
+                        }
+
+
+                    });
+                }
+                //if firstCard count === idNum the user has clicked the same card
+                else if (firstCard.count === idNum) {
+                    alert("please choose a different card");
+                }
+                else {
+                    secondCard = null;
+                    firstCard = null;
+                    successFullFlips += 1;
+                    if (successFullFlips === 8) {
+                        successFullFlips = 0;
+                        var deckIndex = 0;
+                        stackDeck(deckIndex);
+                    }
+                }
+            }, 1000);
+        }
+        else {
+            alert("this card has been flipped");
+            secondCard = null;
+        }
+    }
+}
 
 function setDeck() {
     var count = 0;
@@ -307,11 +296,40 @@ function setDeck() {
     })
 }
 
-
 function restGame(){
     var shuffled = shuffleLocation();
     for( var i = 0; i < shuffled.length; i++){
         Deck[i].reset();
         Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
     }
+}
+
+function displayPlayerStats(player){
+    document.getElementById("stats").innerHTML = String(player.ID);
+}
+
+function loadStats(facebookResponse) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+           allUserStats = JSON.stringify(this.responseText);
+        }
+    };
+    xhttp.open("GET", "allUserStats.txt", true);
+    xhttp.send();
+
+    allUserStats.forEach(function (t) {
+        if(t.ID === facebookResponse.userID){
+            playerStats = t;
+        }
+    });
+
+    if(playerStats !== undefined){
+        displayPlayerStats(playerStats);
+    }
+    else {
+        playerStats = new Stats(0,0,0,facebookResponse.userID);
+        displayPlayerStats(playerStats);
+    }
+
 }
