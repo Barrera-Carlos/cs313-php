@@ -77,7 +77,7 @@ function loadStats(response) {
     xhttp.send();
 
     allUserStats.forEach(function (t) {
-        if(t.name === response.userID){
+        if(t.name === response.authResponse.userID){
             playerStats = t;
         }
     });
@@ -88,7 +88,7 @@ function loadStats(response) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,response.status);
+        playerStats = new Stats(0,0,0,response.authResponse.userID);
         displayPlayerStats(playerStats);
     }
 
