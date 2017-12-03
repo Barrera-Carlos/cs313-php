@@ -1,11 +1,12 @@
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
-function Stats(clicks, time, totalGames, name){
-    this.clicks = clicks;
-    this.time = time;
-    this.totalGames = totalGames;
-    this.name = name;
+function Stats(clicks, time, addGameAmount, ID){
+    // if size of this clicks/time is 0 set the new time in element 0
+    this.clicks.push(clicks);
+    this.time.push(time);
+    this.totalGames = addGameAmount;
+    this.ID = ID;
 }
 
 
@@ -19,6 +20,7 @@ function statusChangeCallback(response) {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
+        hasPlayerLoggedIn = true;
         testAPI();
     } else {
         // The person is not logged into your app or we are unable to tell.
@@ -28,7 +30,7 @@ function statusChangeCallback(response) {
 
 // this function will load player stats if the player has logged in else it will
 // inform the user his game stats will not be stored.
-function checkLoginState() {
+function logInButton() {
 
     FB.getLoginStatus(function(response) {
         if(response.status === 'connected'){
@@ -39,6 +41,7 @@ function checkLoginState() {
                 if (response.status === 'connected') {
                     // Logged into your app and Facebook.
                     alert("player has connected");
+                    hasPlayerLoggedIn = true;
                     loadStats(response)
                 } else {
                     // The person is not logged into this app or we are unable to tell.
@@ -61,7 +64,7 @@ function testAPI() {
 }
 
 function displayPlayerStats(player){
-    document.getElementById("stats").innerHTML = player.name;
+    document.getElementById("stats").innerHTML = player.ID;
 }
 
 function loadStats(response) {
@@ -77,7 +80,7 @@ function loadStats(response) {
     xhttp.send();
 
     allUserStats.forEach(function (t) {
-        if(t.name === response.authResponse.userID){
+        if(t.ID === response.authResponse.userID){
             playerStats = t;
         }
     });
@@ -110,7 +113,7 @@ var cardFace = [
     "cardImg/9.png"
 ];
 var playerStats = null;
-
+var hasPlayerLoggedIn = false;
 var firstCard = null;
 var secondCard = null;
 
@@ -248,6 +251,8 @@ function stackDeck(DeckIndex) {
 
         console.log(Deck[DeckIndex].cardFace);
         stackDeck(DeckIndex+1);
+
+        //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
     }
 }
 
@@ -333,6 +338,8 @@ function setDeck() {
         card.setCard();
         Deck.push(card);
     })
+
+    //start time.
 }
 
 function restGame(){
