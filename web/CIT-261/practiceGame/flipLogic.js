@@ -370,7 +370,7 @@ function setDeck() {
     timer = setInterval(function () {
         timeInteval += .1;
         if(playerLoggedIn){
-
+            displayPlayerStats();
         }
     },1000)
 
@@ -382,6 +382,13 @@ function restGame(){
         Deck[i].reset();
         Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
     }
+    timeInteval = 0;
+    timer = setInterval(function () {
+        timeInteval += .1;
+        if(playerLoggedIn){
+            displayPlayerStats();
+        }
+    },1000)
 }
 
 //time keeping needs to be re-designed. keeping track of time will not be enough? or as easy as thought
