@@ -284,6 +284,7 @@ function stackDeck(DeckIndex) {
         if(playerLoggedIn){
             playerStats.time.push(timeInteval);
             playerStats.totalGames += 1;
+            displayPlayerStats();
         }
 
     }
@@ -374,7 +375,7 @@ function setDeck() {
 
     //start time.
     timer = setInterval(function () {
-        timeInteval += .1;
+        timeInteval += 1;
         if(playerLoggedIn){
             displayPlayerStats();
         }
