@@ -109,7 +109,8 @@ function logInButton() {
 }*/
 
 function displayPlayerStats(){
-    document.getElementById("stats").innerHTML = String(playerStats.timeAverageMean())+"<br>"+String(playerStats.recentGameTime());
+    document.getElementById("stats").innerHTML = String(Math.round(playerStats.timeAverageMean()))+"<br>"+
+        String(Math.round(playerStats.recentGameTime()));
 }
 
 function loadStats(response) {
@@ -275,8 +276,6 @@ function stackDeck(DeckIndex) {
         var time = setInterval(function () {
             Deck[DeckIndex].showBack(time);
         });
-
-        console.log(Deck[DeckIndex].cardFace);
         stackDeck(DeckIndex+1);
 
         //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
