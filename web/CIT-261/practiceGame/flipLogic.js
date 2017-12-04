@@ -137,7 +137,7 @@ function loadStats(response) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(1,response.authResponse.userID);
+        playerStats = new Stats(0,response.authResponse.userID);
         displayPlayerStats(playerStats);
     }
 
