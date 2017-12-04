@@ -59,7 +59,7 @@ function statusChangeCallback(response) {
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
         playerLoggedIn = true;
-        testAPI();
+        logInButton();
     } else {
         // The person is not logged into your app or we are unable to tell.
         alert("please log in so we can save your stats, no personal information will be stored")
@@ -94,12 +94,12 @@ function logInButton() {
 
 // Here we run a very simple test of the Graph API after login is
 // successful.  See statusChangeCallback() for when this call is made.
-function testAPI() {
+/*function testAPI() {
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
         console.log('Successful login for: ' + response.name);
     });
-}
+}*/
 
 function displayPlayerStats(){
     document.getElementById("stats").innerHTML = String(playerStats.timeAverageMean());
