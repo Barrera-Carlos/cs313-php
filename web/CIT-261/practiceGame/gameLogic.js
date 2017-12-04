@@ -64,11 +64,14 @@ function testAPI() {
 }
 
 function displayPlayerStats(player){
-    document.getElementById("stats").innerHTML = player.ID;
+    //document.getElementById("stats").innerHTML = player.ID;
+    var hour = new Date();
+    document.getElementById("stats").innerHTML = String(hour.getHours()) + ":" + String(hour.getMinutes());
 }
 
 function loadStats(response) {
     var allUserStats = [];
+    var playerStats = null;
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -100,7 +103,6 @@ function loadStats(response) {
 
 
 var Deck = [];
-var successFullFlips = 0;
 var backDesign = "cardImg/back2.png";
 var cardFace = [
     "cardImg/2.png",
@@ -112,7 +114,10 @@ var cardFace = [
     "cardImg/8.png",
     "cardImg/9.png"
 ];
-var playerStats = null;
+
+//this information could be save locally for the duration of the gem
+// to abide with obj coding rules.
+var successFullFlips = 0;
 var hasPlayerLoggedIn = false;
 var firstCard = null;
 var secondCard = null;
@@ -340,6 +345,8 @@ function setDeck() {
     })
 
     //start time.
+
+
 }
 
 function restGame(){
