@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
-function Stats(clicks, time, addGameAmount, ID){
+function Stats(addGameAmount, ID){
     // if size of this clicks/time is 0 set the new time in element 0
-    this.clicks.push(clicks);
-    this.time.push(time);
+    this.clicks = [];
+    this.time = [];
     this.totalGames = addGameAmount;
     this.ID = ID;
 }
@@ -94,7 +94,7 @@ function loadStats(response) {
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,0,0,response.authResponse.userID);
+        playerStats = new Stats(1,response.authResponse.userID);
         displayPlayerStats(playerStats);
     }
 
