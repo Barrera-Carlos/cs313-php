@@ -44,6 +44,13 @@ function Stats(addGameAmount, ID){
         }
         else
             return timeSum;
+    };
+
+    this.recentGameTime = function () {
+        if(this.time.length)
+            return this.time[this.time.length - 1];
+        else
+            return 0;
     }
 }
 
@@ -102,7 +109,7 @@ function logInButton() {
 }*/
 
 function displayPlayerStats(){
-    document.getElementById("stats").innerHTML = String(playerStats.timeAverageMean());
+    document.getElementById("stats").innerHTML = String(playerStats.timeAverageMean())+"<br>"+String(playerStats.recentGameTime());
 }
 
 function loadStats(response) {
@@ -384,7 +391,7 @@ function restGame(){
     }
     timeInteval = 0;
     timer = setInterval(function () {
-        timeInteval += .1;
+        timeInteval += 1;
         if(playerLoggedIn){
             displayPlayerStats();
         }
