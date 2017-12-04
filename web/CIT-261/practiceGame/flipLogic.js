@@ -42,6 +42,8 @@ function Stats(addGameAmount, ID){
         if (timeSum !== 0){
             return timeSum / this.totalGames;
         }
+        else
+            return timeSum;
     }
 }
 
