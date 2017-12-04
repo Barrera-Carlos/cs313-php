@@ -109,8 +109,8 @@ function logInButton() {
 }*/
 
 function displayPlayerStats(){
-    document.getElementById("stats").innerHTML = String(Math.round(playerStats.timeAverageMean()))+"<br>"+
-        String(Math.round(playerStats.recentGameTime()));
+    document.getElementById("stats").innerHTML = "Time average"+ String(Math.round(playerStats.timeAverageMean()))+"<br>"+
+        "Recent game time: " + String(Math.round(playerStats.recentGameTime()));
 }
 
 function loadStats(response) {
