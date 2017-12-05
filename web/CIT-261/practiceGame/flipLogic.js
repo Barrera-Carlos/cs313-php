@@ -72,7 +72,7 @@ function statusCheck(response) {
 }
 
 function initialLogIn(response) {
-    document.getElementById("log").innerHTML = "Log out";
+    document.getElementById("log").value = "Log out";
     playerLoggedIn = true;
     loadStats(response);
 
