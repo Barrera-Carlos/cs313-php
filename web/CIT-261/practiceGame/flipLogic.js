@@ -116,6 +116,8 @@ function loadStats(response) {
 
     var storedString = localStorage.getItem(String(response.authResponse.userID));
 
+    console.log(String(response.authResponse.userID));
+
     if(storedString !== null){
         stats = JSON.parse(storedString);
     }
@@ -136,6 +138,9 @@ function loadStats(response) {
 
 function saveStats() {
     var stats = new Stats(playerStats.time, playerStats.totalGames, playerStats.ID);
+
+    console.log(String(stats.ID));
+
     var stringifiedStats = JSON.stringify(stats);
     localStorage.setItem(String(stats.ID),stringifiedStats);
 
