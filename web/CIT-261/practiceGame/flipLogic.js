@@ -24,17 +24,16 @@ var timeInterval = 0;
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
-function Stats(time, addGameAmount, ID) {
-    // if size of this clicks/time is 0 set the new time in element 0
-    //this.clicks = [];
+function Stats(clicks, time, addGameAmount, ID) {
+    this.clicks = clicks;
     this.time = time;
     this.totalGames = addGameAmount;
     this.ID = ID;
 }
 
-function StatsWithMethods(time, addGameAmount, ID){
+function StatsWithMethods(clicks, time, addGameAmount, ID){
 
-    Stats.call(this,time,addGameAmount, ID);
+    Stats.call(this, clicks, time,addGameAmount, ID);
 
     this.timeAverageMean = function () {
         var timeSum = 0;
@@ -60,19 +59,15 @@ function StatsWithMethods(time, addGameAmount, ID){
 
 
 // This is called with the results from from FB.getLoginStatus().
-function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
-    // The response object is returned with a status field that lets the
-    // app know the current login status of the person.
-    // Full docs on the response object can be found in the documentation
-    // for FB.getLoginStatus().
+function statusCheck(response) {
+
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
         logInButton();
     } else {
         // The person is not logged into your app or we are unable to tell.
-        alert("please log in so we can save your stats, no personal information will be stored")
+        alert("please log in so we can save your stats, no personal information will be stored");
+        playerLoggedIn = false;
     }
 }
 
@@ -96,6 +91,7 @@ function logInButton() {
                 } else {
                     // The person is not logged into this app or we are unable to tell.
                     alert("player has not connected");
+                    playerLoggedIn =false;
                 }
             });
         }
@@ -124,20 +120,22 @@ function loadStats(response) {
     console.log(JSON.stringify(stats));
     if(stats !== null){
         console.log("LoadStats function is activating stats !== null");
-        playerStats = new StatsWithMethods(stats.time, stats.totalGames,stats.ID);
+        if(stats.clicks === undefined)
+            stats.clicks = 0;
+        playerStats = new StatsWithMethods(stats.clicks, stats.time, stats.totalGames,stats.ID);
         displayPlayerStats(playerStats);
     }
     else {
         console.log("LoadStats function is activating stats === null");
         var time = [];
-        playerStats = new StatsWithMethods(time, 0, response.authResponse.userID);
+        playerStats = new StatsWithMethods(0, time, 0, response.authResponse.userID);
         displayPlayerStats(playerStats);
     }
 
 }
 
 function saveStats() {
-    var stats = new Stats(playerStats.time, playerStats.totalGames, playerStats.ID);
+    var stats = new Stats(playerStats.clicks, playerStats.time, playerStats.totalGames, playerStats.ID);
 
     console.log(String(stats.ID));
 
@@ -292,6 +290,23 @@ function stackDeck(DeckIndex) {
     }
 }
 
+function completeGame() {
+    successFullFlips = 0;
+    var deckIndex = 0;
+
+    clearInterval(timer);
+
+    if(playerLoggedIn){
+
+        playerStats.time.push(timeInterval);
+        playerStats.totalGames += 1;
+        saveStats();
+        displayPlayerStats();
+    }
+
+    stackDeck(deckIndex);
+}
+
 function cardClick(idNum){
     if(firstCard === null){
         Deck.forEach(function (t) {
@@ -349,24 +364,7 @@ function cardClick(idNum){
                     firstCard = null;
                     successFullFlips += 1;
                     if (successFullFlips === 8) {
-                        successFullFlips = 0;
-                        var deckIndex = 0;
-
-
-                        //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
-                        // initiate save stat info in this function
-                        //this code should be i its own function.
-                        clearInterval(timer);
-
-                        if(playerLoggedIn){
-
-                            playerStats.time.push(timeInterval);
-                            playerStats.totalGames += 1;
-                            saveStats();
-                            displayPlayerStats();
-                        }
-
-                        stackDeck(deckIndex);
+                        completeGame();
                     }
                 }
             }, 1000);
@@ -376,6 +374,11 @@ function cardClick(idNum){
             secondCard = null;
         }
     }
+
+    if(playerLoggedIn){
+        playerStats.clicks += 1;
+    }
+
 }
 
 function setDeck() {
