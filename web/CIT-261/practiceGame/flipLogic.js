@@ -102,7 +102,8 @@ function logInButton() {
 
 function displayPlayerStats(){
     document.getElementById("stats").innerHTML = "Average Time: "+ String(Math.round(playerStats.timeAverageMean()))
-        + 's'+ "<br>"+ "Recent time: " + String(playerStats.recentGameTime()) + 's';
+        + 's'+ "<br>"+ "Recent time: " + String(playerStats.recentGameTime()) + 's' + "<br>" +
+        "Clicks: " + String(playerStats.clicks);
 }
 
 function loadStats(response) {
