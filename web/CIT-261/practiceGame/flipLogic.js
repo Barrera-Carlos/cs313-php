@@ -21,7 +21,6 @@ var secondCard = null;
 var playerStats = null;
 var timer = null;
 var timeInterval = 0;
-var allUserStats = [];
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
@@ -123,8 +122,7 @@ function loadStats(response) {
     }
 
     console.log(JSON.stringify(stats));
-    console.log(String(stats instanceof Stats));
-    if(stats !== null && stats instanceof Stats === null){
+    if(stats !== null){
         console.log("LoadStats function is activating stats !== null");
         playerStats = new StatsWithMethods(stats.time, stats.totalGames,stats.ID);
         displayPlayerStats(playerStats);
