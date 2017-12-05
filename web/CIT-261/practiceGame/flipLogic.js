@@ -117,7 +117,7 @@ function loadStats(response) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
-            allUserStats = JSON.stringify(this.responseText);
+            allUserStats = JSON.parse(this.responseText);
         }
     };
     xhttp.open("GET", "playerStats.txt", true);
@@ -148,6 +148,7 @@ function saveStats() {
 
     var stats = new Stats(playerStats.time, playerStats.totalGames, playerStats.ID);
     var statsIsNewElm = true;
+
     for(var i = 0; i < allUserStats.length; i++){
         if(allUserStats[i] instanceof Stats && allUserStats[i].ID === stats.ID){
             allUserStats[i] = stats;
@@ -156,7 +157,7 @@ function saveStats() {
     }
     if (statsIsNewElm)
         allUserStats.push(stats);
-    var userStatString = JSON.parse(allUserStats);
+    var userStatString = JSON.stringify(allUserStats);
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -312,16 +313,7 @@ function stackDeck(DeckIndex) {
         });
         stackDeck(DeckIndex+1);
 
-        //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
-        // initiate save stat info in this function
-        clearInterval(timer);
-        if(playerLoggedIn){
-            playerStats.time.push(timeInterval);
-            playerStats.totalGames += 1;
 
-            saveStats();
-            displayPlayerStats();
-        }
 
     }
 }
@@ -385,6 +377,21 @@ function cardClick(idNum){
                     if (successFullFlips === 8) {
                         successFullFlips = 0;
                         var deckIndex = 0;
+
+
+                        //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
+                        // initiate save stat info in this function
+                        //this code should be i its own function.
+                        clearInterval(timer);
+
+                        if(playerLoggedIn){
+
+                            playerStats.time.push(timeInterval);
+                            playerStats.totalGames += 1;
+                            saveStats();
+                            displayPlayerStats();
+                        }
+
                         stackDeck(deckIndex);
                     }
                 }
