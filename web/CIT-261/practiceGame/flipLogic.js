@@ -98,7 +98,7 @@ function logInButton() {
             FB.login(function(response) {
                 if (response.status === 'connected') {
                     // Logged into your app and Facebook.
-                    ocument.getElementById("log").innerText = "Log out";
+                    document.getElementById("log").innerText = "Log out";
                     alert("player has connected");
                     playerLoggedIn = true;
                     loadStats(response)
