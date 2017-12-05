@@ -63,7 +63,7 @@ function statusCheck(response) {
 
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
-        logInButton();
+            initialLogIn(response);
     } else {
         // The person is not logged into your app or we are unable to tell.
         alert("please log in so we can save your stats, no personal information will be stored");
@@ -71,15 +71,28 @@ function statusCheck(response) {
     }
 }
 
+function initialLogIn(response) {
+    document.getElementById("log").innerHTML = "Log out";
+    playerLoggedIn = true;
+    loadStats(response);
+
+}
 // this function will load player stats if the player has logged in else it will
 // inform the user his game stats will not be stored.
 function logInButton() {
 
     FB.getLoginStatus(function(response) {
         if(response.status === 'connected'){
-            playerLoggedIn = true;
-            console.log("player was already logged in");
-            loadStats(response)
+            FB.logout(function (secondResponse) {
+                if(secondResponse.status !== 'connected'){
+                    playerLoggedIn = false;
+                    console.log("player has logged out");
+                    document.getElementById("log").innerHTML = "Log in";
+                }
+                else {
+                    console.log("player did not log out");
+                }
+            });
         }
         else {
             FB.login(function(response) {
