@@ -87,6 +87,7 @@ function logInButton() {
                 if(secondResponse.status !== 'connected'){
                     playerLoggedIn = false;
                     console.log("player has logged out");
+                    clearStats();
                     document.getElementById("log").innerText = "Log in";
                 }
                 else {
@@ -98,6 +99,7 @@ function logInButton() {
             FB.login(function(response) {
                 if (response.status === 'connected') {
                     // Logged into your app and Facebook.
+                    timeInterval = 0;
                     document.getElementById("log").innerText = "Log out";
                     alert("player has connected");
                     playerLoggedIn = true;
@@ -112,6 +114,10 @@ function logInButton() {
     });
 
 
+}
+
+function clearStats() {
+    document.getElementById("stats").innerHTML = '';
 }
 
 function displayPlayerStats(){
