@@ -35,7 +35,7 @@ function Stats(time, addGameAmount, ID) {
 
 function StatsWithMethods(time, addGameAmount, ID){
 
-    Stats.call(time,addGameAmount, ID);
+    Stats.call(this,time,addGameAmount, ID);
 
     this.timeAverageMean = function () {
         var timeSum = 0;
@@ -70,7 +70,6 @@ function statusChangeCallback(response) {
     // for FB.getLoginStatus().
     if (response.status === 'connected') {
         // Logged into your app and Facebook.
-        playerLoggedIn = true;
         logInButton();
     } else {
         // The person is not logged into your app or we are unable to tell.
@@ -84,6 +83,8 @@ function logInButton() {
 
     FB.getLoginStatus(function(response) {
         if(response.status === 'connected'){
+            playerLoggedIn = true;
+            console.log("player was already logged in");
             loadStats(response)
         }
         else {
