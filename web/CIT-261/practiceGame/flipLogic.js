@@ -20,17 +20,22 @@ var firstCard = null;
 var secondCard = null;
 var playerStats = null;
 var timer = null;
-var timeInteval = 0;
-
+var timeInterval = 0;
+var allUserStats = [];
 ////////////////////////////////////////////////////////////////////
 //this code is used to log-in using Facebook
 
-function Stats(addGameAmount, ID){
+function Stats(time, addGameAmount, ID) {
     // if size of this clicks/time is 0 set the new time in element 0
     //this.clicks = [];
-    this.time = [];
+    this.time = time;
     this.totalGames = addGameAmount;
     this.ID = ID;
+}
+
+function StatsWithMethods(time, addGameAmount, ID){
+
+    Stats.call(time,addGameAmount, ID);
 
     this.timeAverageMean = function () {
         var timeSum = 0;
@@ -99,22 +104,14 @@ function logInButton() {
 
 }
 
-// Here we run a very simple test of the Graph API after login is
-// successful.  See statusChangeCallback() for when this call is made.
-/*function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-        console.log('Successful login for: ' + response.name);
-    });
-}*/
-
 function displayPlayerStats(){
     document.getElementById("stats").innerHTML = "Time average: "+ String(Math.round(playerStats.timeAverageMean()))+"<br>"+
         "Recent game time: " + String(playerStats.recentGameTime());
 }
 
 function loadStats(response) {
-    var allUserStats = [];
+
+    var stats = null;
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -127,22 +124,58 @@ function loadStats(response) {
 
     allUserStats.forEach(function (t) {
         if(t.ID === response.authResponse.userID){
-            playerStats = t;
+            stats = t;
         }
     });
 
-    if(playerStats !== null){
+    if(stats !== null && stats instanceof Stats){
         console.log("LoadStats function is activating playerStats !== null");
+        playerStats = new StatsWithMethods(stats.time, stats.totalGames,stats.ID);
         displayPlayerStats(playerStats);
     }
     else {
         console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(0,response.authResponse.userID);
+        var time = [];
+        playerStats = new StatsWithMethods(time, 0, response.authResponse.userID);
         displayPlayerStats(playerStats);
     }
 
 }
+
+function saveStats() {
+
+
+    var stats = new Stats(playerStats.time, playerStats.totalGames, playerStats.ID);
+    var statsIsNewElm = true;
+    for(var i = 0; i < allUserStats.length; i++){
+        if(allUserStats[i] instanceof Stats && allUserStats[i].ID === stats.ID){
+            allUserStats[i] = stats;
+            statsIsNewElm = false;
+        }
+    }
+    if (statsIsNewElm)
+        allUserStats.push(stats);
+    var userStatString = JSON.parse(allUserStats);
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState === 4 && this.status === 200) {
+            console.log("user stats has been saved");
+        }
+    };
+
+    xhttp.open("POST", "playerStats.txt", true);
+    xhttp.send(userStatString);
+
+
+}
 ////////////////////////////////////////////////////////////////////////////////////////
+
+/*//////////////////////////////////////////////////////////////////////////////////////
+//this code block is for saving short term information
+ ////////////////////////////////////////////////////////////////////////////////////*/
+
+
 
 
 
@@ -282,8 +315,10 @@ function stackDeck(DeckIndex) {
         // initiate save stat info in this function
         clearInterval(timer);
         if(playerLoggedIn){
-            playerStats.time.push(timeInteval);
+            playerStats.time.push(timeInterval);
             playerStats.totalGames += 1;
+
+            saveStats();
             displayPlayerStats();
         }
 
@@ -375,7 +410,7 @@ function setDeck() {
 
     //start time.
     timer = setInterval(function () {
-        timeInteval += 1;
+        timeInterval += 1;
         if(playerLoggedIn){
             displayPlayerStats();
         }
@@ -389,9 +424,9 @@ function restGame(){
         Deck[i].reset();
         Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
     }
-    timeInteval = 0;
+    timeInterval = 0;
     timer = setInterval(function () {
-        timeInteval += 1;
+        timeInterval += 1;
         if(playerLoggedIn){
             displayPlayerStats();
         }
