@@ -146,13 +146,6 @@ function saveStats() {
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 
-/*//////////////////////////////////////////////////////////////////////////////////////
-//this code block is for saving short term information
- ////////////////////////////////////////////////////////////////////////////////////*/
-
-
-
-
 
 // Fisher-Yates algorithm
 function shuffle(array) {
@@ -275,7 +268,7 @@ function Card(xLocation, yLocation, count) {
 function stackDeck(DeckIndex) {
     if(DeckIndex < Deck.length){
         Deck[DeckIndex].elm.style.left = "-140px";
-        Deck[DeckIndex].elm.style.top = "80px";
+        Deck[DeckIndex].elm.style.top = "130px";
         Deck[DeckIndex].reset();
         Deck[DeckIndex].faceHasFlipped = true;
 
