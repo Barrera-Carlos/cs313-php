@@ -87,7 +87,7 @@ function logInButton() {
                 if(secondResponse.status !== 'connected'){
                     playerLoggedIn = false;
                     console.log("player has logged out");
-                    document.getElementById("log").innerHTML = "Log in";
+                    document.getElementById("log").value = "Log in";
                 }
                 else {
                     console.log("player did not log out");
