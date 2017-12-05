@@ -106,32 +106,19 @@ function logInButton() {
 }
 
 function displayPlayerStats(){
-    document.getElementById("stats").innerHTML = "Time average: "+ String(Math.round(playerStats.timeAverageMean()))+"<br>"+
-        "Recent game time: " + String(playerStats.recentGameTime());
+    document.getElementById("stats").innerHTML = "Average Time: "+ String(Math.round(playerStats.timeAverageMean()))
+        + 's'+ "<br>"+ "Recent time: " + String(playerStats.recentGameTime()) + 's';
 }
 
 function loadStats(response) {
 
     var stats = null;
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-            if(this.responseText !== '')
-                allUserStats = JSON.parse(String(this.responseText));
-            else
-                alert("nothing saved in file");
+    var storedString = localStorage.getItem(String(response.authResponse.userID));
 
-        }
-    };
-    xhttp.open("GET", "playerStats.txt", true);
-    xhttp.send();
-
-    allUserStats.forEach(function (t) {
-        if(t.ID === response.authResponse.userID){
-            stats = t;
-        }
-    });
+    if(storedString !== null){
+        stats = JSON.parse(storedString);
+    }
 
     if(stats !== null && stats instanceof Stats){
         console.log("LoadStats function is activating playerStats !== null");
@@ -148,31 +135,9 @@ function loadStats(response) {
 }
 
 function saveStats() {
-
-
     var stats = new Stats(playerStats.time, playerStats.totalGames, playerStats.ID);
-    var statsIsNewElm = true;
-
-    for(var i = 0; i < allUserStats.length; i++){
-        if(allUserStats[i] instanceof Stats && allUserStats[i].ID === stats.ID){
-            allUserStats[i] = stats;
-            statsIsNewElm = false;
-        }
-    }
-    if (statsIsNewElm)
-        allUserStats.push(stats);
-    var userStatString = JSON.stringify(allUserStats);
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-            console.log("user stats has been saved");
-        }
-    };
-
-    xhttp.open("POST", "playerStats.txt", true);
-    xhttp.send(userStatString);
-
+    var stringifiedStats = JSON.stringify(stats);
+    localStorage.setItem(String(stats.ID),stringifiedStats);
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////
