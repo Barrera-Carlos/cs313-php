@@ -117,7 +117,8 @@ function loadStats(response) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
-            allUserStats = JSON.parse(this.responseText);
+            //allUserStats = JSON.parse(String(this.responseText));
+            alert(this.responseText);
         }
     };
     xhttp.open("GET", "playerStats.txt", true);
