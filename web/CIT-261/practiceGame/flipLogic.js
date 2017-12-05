@@ -122,13 +122,15 @@ function loadStats(response) {
         stats = JSON.parse(storedString);
     }
 
-    if(stats !== null && stats instanceof Stats){
-        console.log("LoadStats function is activating playerStats !== null");
+    console.log(JSON.stringify(stats));
+    console.log(String(stats instanceof Stats));
+    if(stats !== null && stats instanceof Stats === null){
+        console.log("LoadStats function is activating stats !== null");
         playerStats = new StatsWithMethods(stats.time, stats.totalGames,stats.ID);
         displayPlayerStats(playerStats);
     }
     else {
-        console.log("LoadStats function is activating playerStats === null");
+        console.log("LoadStats function is activating stats === null");
         var time = [];
         playerStats = new StatsWithMethods(time, 0, response.authResponse.userID);
         displayPlayerStats(playerStats);
