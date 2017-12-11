@@ -11,9 +11,6 @@ var cardFace = [
     "cardImg/8.png",
     "cardImg/9.png"
 ];
-
-//this information could be save locally for the duration of the gem
-// to abide with obj coding rules.
 var successFullFlips = 0;
 var playerLoggedIn = false;
 var firstCard = null;
@@ -21,9 +18,11 @@ var secondCard = null;
 var playerStats = null;
 var timer = null;
 var timeInterval = 0;
-////////////////////////////////////////////////////////////////////
-//this code is used to log-in using Facebook
 
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// Object that will hold the stats of the player
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function Stats(clicks, time, addGameAmount, ID) {
     this.clicks = clicks;
     this.time = time;
@@ -31,6 +30,9 @@ function Stats(clicks, time, addGameAmount, ID) {
     this.ID = ID;
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//Object that will hold the stats of the player and includes methods
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function StatsWithMethods(clicks, time, addGameAmount, ID){
 
     Stats.call(this, clicks, time,addGameAmount, ID);
@@ -57,13 +59,16 @@ function StatsWithMethods(clicks, time, addGameAmount, ID){
     }
 }
 
-
-// This is called with the results from from FB.getLoginStatus().
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// This function is called when the page is loaded. it will load users info or asd the user
+// to log in if they haven't
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function statusCheck(response) {
 
     if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-            initialLogIn(response);
+        document.getElementById("log").innerText = "Log out";
+        playerLoggedIn = true;
+        loadStats(response);
     } else {
         // The person is not logged into your app or we are unable to tell.
         alert("please log in so we can save your stats, no personal information will be stored");
@@ -71,14 +76,10 @@ function statusCheck(response) {
     }
 }
 
-function initialLogIn(response) {
-    document.getElementById("log").innerText = "Log out";
-    playerLoggedIn = true;
-    loadStats(response);
-
-}
+/*////////////////////////////////////////////////////////////////////////////////////////////
 // this function will load player stats if the player has logged in else it will
 // inform the user his game stats will not be stored.
+//////////////////////////////////////////////////////////////////////////////////////////*/
 function logInButton() {
 
     FB.getLoginStatus(function(response) {
@@ -116,16 +117,26 @@ function logInButton() {
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// clear stats display
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function clearStats() {
     document.getElementById("stats").innerHTML = '';
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//will display player stats
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function displayPlayerStats(){
     document.getElementById("stats").innerHTML = "Average Time: "+ String(Math.round(playerStats.timeAverageMean()))
         + 's'+ "<br>"+ "Recent time: " + String(playerStats.recentGameTime()) + 's' + "<br>" +
         "Clicks: " + String(playerStats.clicks);
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// will obtain the player stats from local storage, and fill the object that will
+// be used threw ot the session
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function loadStats(response) {
 
     var stats = null;
@@ -155,6 +166,9 @@ function loadStats(response) {
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//  will save the users stats in local storage
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function saveStats() {
     var stats = new Stats(playerStats.clicks, playerStats.time, playerStats.totalGames, playerStats.ID);
 
@@ -164,10 +178,10 @@ function saveStats() {
     localStorage.setItem(String(stats.ID),stringifiedStats);
 
 }
-////////////////////////////////////////////////////////////////////////////////////////
 
-
+/*////////////////////////////////////////////////////////////////////////////////////////////
 // Fisher-Yates algorithm
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -187,6 +201,9 @@ function shuffle(array) {
     return array;
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// will return an array of shuffled coordinate objects
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function shuffleLocation() {
     var location = [];
     for(var y = 0; y < 4; y++){
@@ -198,11 +215,18 @@ function shuffleLocation() {
     return shuffle(location);
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//object that hols an x and y location
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function Coordinates(x,y) {
     this.x = x*200;
     this.y = y*200;
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// the object hold the state and position of the card graphic.it also
+// has methods to flip the card
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function Card(xLocation, yLocation, count) {
     this.elm = document.getElementById("card_"+ count);
     this.xLocation = xLocation;
@@ -285,6 +309,9 @@ function Card(xLocation, yLocation, count) {
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// changes the location of each card to the corner of the page
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function stackDeck(DeckIndex) {
     if(DeckIndex < Deck.length){
         Deck[DeckIndex].elm.style.left = "-140px";
@@ -304,6 +331,10 @@ function stackDeck(DeckIndex) {
     }
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//once all the card have been matched this function will change there state and call
+//stack deck
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function completeGame() {
     successFullFlips = 0;
     var deckIndex = 0;
@@ -321,11 +352,16 @@ function completeGame() {
     stackDeck(deckIndex);
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//this is the card matching logic
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function cardClick(idNum){
+
     if(firstCard === null){
         Deck.forEach(function (t) {
-            if(t.count === idNum)
+            if(t.count === idNum){
                 firstCard = t;
+            }
         });
         if(!firstCard.faceHasFlipped){
             var firstTimer = setInterval(function () {
@@ -395,6 +431,9 @@ function cardClick(idNum){
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//this creates the deck and assigns every card a value and position
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function setDeck() {
     var count = 0;
     var shuffled = shuffleLocation();
@@ -405,6 +444,7 @@ function setDeck() {
         count += 1;
         card.setCard();
         Deck.push(card);
+        console.log(String(count));
     });
 
     //start time.
@@ -417,11 +457,14 @@ function setDeck() {
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//gives the objects inside the Deck a new position and resets its state
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function restGame(){
-    var shuffled = shuffleLocation();
-    for( var i = 0; i < shuffled.length; i++){
+    var shuffledLocation = shuffleLocation();
+    for( var i = 0; i < shuffledLocation.length; i++){
         Deck[i].reset();
-        Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
+        Deck[i].moveCard(shuffledLocation[i].x,shuffledLocation[i].y);
     }
     timeInterval = 0;
     timer = setInterval(function () {
@@ -431,6 +474,3 @@ function restGame(){
         }
     },1000)
 }
-
-//time keeping needs to be re-designed. keeping track of time will not be enough? or as easy as thought
-// resetGame, stackDeck, calulateTime will need to be changed before pushing.
