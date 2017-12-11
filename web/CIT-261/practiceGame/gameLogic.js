@@ -1,107 +1,3 @@
-////////////////////////////////////////////////////////////////////
-//this code is used to log-in using Facebook
-
-function Stats(addGameAmount, ID){
-    // if size of this clicks/time is 0 set the new time in element 0
-    this.clicks = [];
-    this.time = [];
-    this.totalGames = addGameAmount;
-    this.ID = ID;
-}
-
-
-// This is called with the results from from FB.getLoginStatus().
-function statusChangeCallback(response) {
-    console.log('statusChangeCallback');
-    console.log(response);
-    // The response object is returned with a status field that lets the
-    // app know the current login status of the person.
-    // Full docs on the response object can be found in the documentation
-    // for FB.getLoginStatus().
-    if (response.status === 'connected') {
-        // Logged into your app and Facebook.
-        hasPlayerLoggedIn = true;
-        testAPI();
-    } else {
-        // The person is not logged into your app or we are unable to tell.
-        alert("please log in so we can save your stats, no personal information will be stored")
-    }
-}
-
-// this function will load player stats if the player has logged in else it will
-// inform the user his game stats will not be stored.
-function logInButton() {
-
-    FB.getLoginStatus(function(response) {
-        if(response.status === 'connected'){
-            loadStats(response)
-        }
-        else {
-            FB.login(function(response) {
-                if (response.status === 'connected') {
-                    // Logged into your app and Facebook.
-                    alert("player has connected");
-                    hasPlayerLoggedIn = true;
-                    loadStats(response)
-                } else {
-                    // The person is not logged into this app or we are unable to tell.
-                    alert("player has not connected");
-                }
-            });
-        }
-    });
-
-
-}
-
-// Here we run a very simple test of the Graph API after login is
-// successful.  See statusChangeCallback() for when this call is made.
-function testAPI() {
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function(response) {
-        console.log('Successful login for: ' + response.name);
-    });
-}
-
-function displayPlayerStats(player){
-    //document.getElementById("stats").innerHTML = player.ID;
-    var hour = new Date();
-    document.getElementById("stats").innerHTML = String(hour.getHours()) + ":" + String(hour.getMinutes());
-}
-
-function loadStats(response) {
-    var allUserStats = [];
-    var playerStats = null;
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState === 4 && this.status === 200) {
-            allUserStats = JSON.stringify(this.responseText);
-        }
-    };
-    xhttp.open("GET", "playerStats.txt", true);
-    xhttp.send();
-
-    allUserStats.forEach(function (t) {
-        if(t.ID === response.authResponse.userID){
-            playerStats = t;
-        }
-    });
-
-    if(playerStats !== null){
-        console.log("LoadStats function is activating playerStats !== null");
-        displayPlayerStats(playerStats);
-    }
-    else {
-        console.log("LoadStats function is activating playerStats === null");
-        playerStats = new Stats(1,response.authResponse.userID);
-        displayPlayerStats(playerStats);
-    }
-
-}
-////////////////////////////////////////////////////////////////////////////////////////
-
-
 var Deck = [];
 var backDesign = "cardImg/back2.png";
 var cardFace = [
@@ -114,16 +10,177 @@ var cardFace = [
     "cardImg/8.png",
     "cardImg/9.png"
 ];
-
-//this information could be save locally for the duration of the gem
-// to abide with obj coding rules.
 var successFullFlips = 0;
-var hasPlayerLoggedIn = false;
+var playerLoggedIn = false;
 var firstCard = null;
 var secondCard = null;
+var playerStats = null;
+var timer = null;
+var timeInterval = 0;
 
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// Object that will hold the stats of the player
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function Stats(clicks, time, addGameAmount, ID) {
+    this.clicks = clicks;
+    this.time = time;
+    this.totalGames = addGameAmount;
+    this.ID = ID;
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//Object that will hold the stats of the player and includes methods
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function StatsWithMethods(clicks, time, addGameAmount, ID){
+
+    Stats.call(this, clicks, time,addGameAmount, ID);
+
+    this.timeAverageMean = function () {
+        var timeSum = 0;
+
+        this.time.forEach(function (t) {
+            timeSum += t;
+        });
+
+        if (timeSum !== 0){
+            return timeSum / this.totalGames;
+        }
+        else
+            return timeSum;
+    };
+
+    this.recentGameTime = function () {
+        if(this.time.length)
+            return this.time[this.time.length - 1];
+        else
+            return 0;
+    }
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// This function is called when the page is loaded. it will load users info or asd the user
+// to log in if they haven't
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function statusCheck(response) {
+
+    if (response.status === 'connected') {
+        document.getElementById("log").innerText = "Log out";
+        playerLoggedIn = true;
+        loadStats(response);
+    } else {
+        // The person is not logged into your app or we are unable to tell.
+        alert("please log in so we can save your stats, no personal information will be stored");
+        playerLoggedIn = false;
+    }
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// this function will load player stats if the player has logged in else it will
+// inform the user his game stats will not be stored.
+//////////////////////////////////////////////////////////////////////////////////////////*/
+function logInButton() {
+
+    FB.getLoginStatus(function(response) {
+        if(response.status === 'connected'){
+            FB.logout(function (secondResponse) {
+                if(secondResponse.status !== 'connected'){
+                    playerLoggedIn = false;
+                    console.log("player has logged out");
+                    clearStats();
+                    document.getElementById("log").innerText = "Log in";
+                }
+                else {
+                    console.log("player did not log out");
+                }
+            });
+        }
+        else {
+            FB.login(function(response) {
+                if (response.status === 'connected') {
+                    // Logged into your app and Facebook.
+                    timeInterval = 0;
+                    document.getElementById("log").innerText = "Log out";
+                    alert("player has connected");
+                    playerLoggedIn = true;
+                    loadStats(response)
+                } else {
+                    // The person is not logged into this app or we are unable to tell.
+                    alert("player has not connected");
+                    playerLoggedIn =false;
+                }
+            });
+        }
+    });
+
+
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// clear stats display
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function clearStats() {
+    document.getElementById("stats").innerHTML = '';
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//will display player stats
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function displayPlayerStats(){
+    document.getElementById("stats").innerHTML = "Average Time: "+ String(Math.round(playerStats.timeAverageMean()))
+        + 's'+ "<br>"+ "Recent time: " + String(playerStats.recentGameTime()) + 's' + "<br>" +
+        "Clicks: " + String(playerStats.clicks);
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// will obtain the player stats from local storage, and fill the object that will
+// be used threw ot the session
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function loadStats(response) {
+
+    var stats = null;
+
+    var storedString = localStorage.getItem(String(response.authResponse.userID));
+
+    console.log(String(response.authResponse.userID));
+
+    if(storedString !== null){
+        stats = JSON.parse(storedString);
+    }
+
+    console.log(JSON.stringify(stats));
+    if(stats !== null){
+        console.log("LoadStats function is activating stats !== null");
+        if(stats.clicks === undefined)
+            stats.clicks = 0;
+        playerStats = new StatsWithMethods(stats.clicks, stats.time, stats.totalGames,stats.ID);
+        displayPlayerStats(playerStats);
+    }
+    else {
+        console.log("LoadStats function is activating stats === null");
+        var time = [];
+        playerStats = new StatsWithMethods(0, time, 0, response.authResponse.userID);
+        displayPlayerStats(playerStats);
+    }
+
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//  will save the users stats in local storage
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function saveStats() {
+    var stats = new Stats(playerStats.clicks, playerStats.time, playerStats.totalGames, playerStats.ID);
+
+    console.log(String(stats.ID));
+
+    var stringifiedStats = JSON.stringify(stats);
+    localStorage.setItem(String(stats.ID),stringifiedStats);
+
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
 // Fisher-Yates algorithm
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -143,6 +200,9 @@ function shuffle(array) {
     return array;
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// will return an array of shuffled coordinate objects
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function shuffleLocation() {
     var location = [];
     for(var y = 0; y < 4; y++){
@@ -151,14 +211,21 @@ function shuffleLocation() {
             location.push(new Coordinates(x,y));
         }
     }
-     return shuffle(location);
+    return shuffle(location);
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//object that hols an x and y location
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function Coordinates(x,y) {
     this.x = x*200;
     this.y = y*200;
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// the object hold the state and position of the card graphic.it also
+// has methods to flip the card
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function Card(xLocation, yLocation, count) {
     this.elm = document.getElementById("card_"+ count);
     this.xLocation = xLocation;
@@ -190,30 +257,7 @@ function Card(xLocation, yLocation, count) {
         this.doneFlipping = false;
     };
 
-    this.showFace = function (timer) {
-        if (this.angle < 95 && !this.hasItFlipped){
-            this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-            this.angle += 1;
-            if(this.angle > 90) {
-                this.hasItFlipped = true;
-                this.elm.firstElementChild.src = this.cardFace;
-            }
-        }
-        else if(this.angle > 0 && !this.doneFlipping){
-            this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-            this.angle -= 1;
-            if(this.angle < 0) {
-                this.doneFlipping = true;
-            }
-        }
-        else{
-            this.faceHasFlipped = true;
-            this.hasItFlipped = false;
-            this.doneFlipping = false;
-            this.angle = 0;
-            clearInterval(timer);
-        }
-
+    this.showFace = function () {
 
     };
     this.showBack = function (time){
@@ -241,10 +285,13 @@ function Card(xLocation, yLocation, count) {
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+// changes the location of each card to the corner of the page
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function stackDeck(DeckIndex) {
     if(DeckIndex < Deck.length){
         Deck[DeckIndex].elm.style.left = "-140px";
-        Deck[DeckIndex].elm.style.top = "80px";
+        Deck[DeckIndex].elm.style.top = "130px";
         Deck[DeckIndex].reset();
         Deck[DeckIndex].faceHasFlipped = true;
 
@@ -253,24 +300,78 @@ function stackDeck(DeckIndex) {
         var time = setInterval(function () {
             Deck[DeckIndex].showBack(time);
         });
-
-        console.log(Deck[DeckIndex].cardFace);
         stackDeck(DeckIndex+1);
 
-        //stop timer. if user has logged in  add stats to loaded character stats. else just ignore the loaded time.
+
+
     }
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//once all the card have been matched this function will change there state and call
+//stack deck
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function completeGame() {
+    successFullFlips = 0;
+    var deckIndex = 0;
+
+    clearInterval(timer);
+
+    if(playerLoggedIn){
+
+        playerStats.time.push(timeInterval);
+        playerStats.totalGames += 1;
+        saveStats();
+        displayPlayerStats();
+    }
+
+    stackDeck(deckIndex);
+}
+
+
+function flipCard() {
+
+    if (firstCard.angle < 95 && !firstCard.hasItFlipped){
+        firstCard.elm.style.transform = "rotateY(" + firstCard.angle + "deg)";
+        firstCard.angle += 1;
+        console.log(String(firstCard.hasItFlipped));
+        if(firstCard.angle > 90) {
+            firstCard.hasItFlipped = true;
+            console.log(String(firstCard.hasItFlipped));
+            firstCard.elm.firstElementChild.src = firstCard.cardFace;
+        }
+    }
+    else if(firstCard.angle > 0 && !firstCard.doneFlipping){
+        firstCard.elm.style.transform = "rotateY(" + firstCard.angle + "deg)";
+        firstCard.angle -= 1;
+        if(firstCard.angle < 0) {
+            firstCard.doneFlipping = true;
+        }
+    }
+    else{
+        firstCard.faceHasFlipped = true;
+        firstCard.hasItFlipped = false;
+        firstCard.doneFlipping = false;
+        firstCard.angle = 0;
+        //cancelAnimationFrame(time);
+    }
+}
+
+
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//this is the card matching logic
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function cardClick(idNum){
+
     if(firstCard === null){
         Deck.forEach(function (t) {
-            if(t.count === idNum)
+            if(t.count === idNum){
                 firstCard = t;
+            }
         });
         if(!firstCard.faceHasFlipped){
-            var firstTimer = setInterval(function () {
-                firstCard.showFace(firstTimer);
-            });
+            requestAnimationFrame(flipCard)
         }
         else{
             alert("this card has been flipped");
@@ -318,9 +419,7 @@ function cardClick(idNum){
                     firstCard = null;
                     successFullFlips += 1;
                     if (successFullFlips === 8) {
-                        successFullFlips = 0;
-                        var deckIndex = 0;
-                        stackDeck(deckIndex);
+                        completeGame();
                     }
                 }
             }, 1000);
@@ -330,8 +429,16 @@ function cardClick(idNum){
             secondCard = null;
         }
     }
+
+    if(playerLoggedIn){
+        playerStats.clicks += 1;
+    }
+
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//this creates the deck and assigns every card a value and position
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function setDeck() {
     var count = 0;
     var shuffled = shuffleLocation();
@@ -342,17 +449,33 @@ function setDeck() {
         count += 1;
         card.setCard();
         Deck.push(card);
-    })
+        console.log(String(count));
+    });
 
     //start time.
-
+    timer = setInterval(function () {
+        timeInterval += 1;
+        if(playerLoggedIn){
+            displayPlayerStats();
+        }
+    },1000)
 
 }
 
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//gives the objects inside the Deck a new position and resets its state
+ //////////////////////////////////////////////////////////////////////////////////////////*/
 function restGame(){
-    var shuffled = shuffleLocation();
-    for( var i = 0; i < shuffled.length; i++){
+    var shuffledLocation = shuffleLocation();
+    for( var i = 0; i < shuffledLocation.length; i++){
         Deck[i].reset();
-        Deck[i].moveCard(shuffled[i].x,shuffled[i].y);
+        Deck[i].moveCard(shuffledLocation[i].x,shuffledLocation[i].y);
     }
+    timeInterval = 0;
+    timer = setInterval(function () {
+        timeInterval += 1;
+        if(playerLoggedIn){
+            displayPlayerStats();
+        }
+    },1000)
 }

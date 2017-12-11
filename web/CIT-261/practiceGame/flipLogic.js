@@ -1,4 +1,3 @@
-
 var Deck = [];
 var backDesign = "cardImg/back2.png";
 var cardFace = [
