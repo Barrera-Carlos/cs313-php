@@ -260,7 +260,7 @@ function Card(xLocation, yLocation, count) {
     this.showFace = function (timer) {
         if (this.angle < 95 && !this.hasItFlipped){
             this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-            this.angle += 1;
+            this.angle += 2;
             if(this.angle > 90) {
                 this.hasItFlipped = true;
                 this.elm.firstElementChild.src = this.cardFace;
@@ -268,7 +268,7 @@ function Card(xLocation, yLocation, count) {
         }
         else if(this.angle > 0 && !this.doneFlipping){
             this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-            this.angle -= 1;
+            this.angle -= 2;
             if(this.angle < 0) {
                 this.doneFlipping = true;
             }
@@ -287,7 +287,7 @@ function Card(xLocation, yLocation, count) {
         if(this.faceHasFlipped){
             if (this.angle < 95 && !this.hasItFlipped){
                 this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-                this.angle += 1;
+                this.angle += 2;
                 if(this.angle >= 90) {
                     this.hasItFlipped = true;
                     this.elm.firstElementChild.src = backDesign;
@@ -295,7 +295,7 @@ function Card(xLocation, yLocation, count) {
             }
             else if(this.angle > 0 && !this.doneFlipping) {
                 this.elm.style.transform = "rotateY(" + this.angle + "deg)";
-                this.angle -= 1;
+                this.angle -= 2;
                 if (this.angle <= 0) {
                     this.doneFlipping = true;
                     this.angle = 0;
@@ -322,11 +322,8 @@ function stackDeck(DeckIndex) {
         //for the flipping to commence. but its set as false because of the reset.
         var time = setInterval(function () {
             Deck[DeckIndex].showBack(time);
-        });
+        },10);
         stackDeck(DeckIndex+1);
-
-
-
     }
 }
 
@@ -365,7 +362,7 @@ function cardClick(idNum){
         if(!firstCard.faceHasFlipped){
             var firstTimer = setInterval(function () {
                 firstCard.showFace(firstTimer);
-            });
+            },10);
         }
         else{
             alert("this card has been flipped");
@@ -381,7 +378,7 @@ function cardClick(idNum){
         if(!secondCard.faceHasFlipped) {
             var secondTimer = setInterval(function () {
                 secondCard.showFace(secondTimer);
-            });
+            },10);
 
             setTimeout(function () {
                 if (secondCard.cardFace !== firstCard.cardFace) {
@@ -391,18 +388,14 @@ function cardClick(idNum){
                             firstCard.reset();
                             firstCard = null;
                         }
-
-
-                    });
+                    },10);
                     var forthTimer = setInterval(function () {
                         secondCard.showBack(forthTimer);
                         if (secondCard.doneFlipping && secondCard.faceHasFlipped) {
                             secondCard.reset();
                             secondCard = null;
                         }
-
-
-                    });
+                    },10);
                 }
                 //if firstCard count === idNum the user has clicked the same card
                 else if (firstCard.count === idNum) {
@@ -416,7 +409,7 @@ function cardClick(idNum){
                         completeGame();
                     }
                 }
-            }, 1000);
+            }, 1500);
         }
         else {
             alert("this card has been flipped");

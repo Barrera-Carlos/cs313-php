@@ -236,6 +236,7 @@ function Card(xLocation, yLocation, count) {
     this.faceHasFlipped = false;
     this.hasItFlipped = false;
     this.doneFlipping = false;
+    this.timeKeeper = null;
 
     this.setCard = function () {
         this.elm.style.position = "absolute";
@@ -257,9 +258,6 @@ function Card(xLocation, yLocation, count) {
         this.doneFlipping = false;
     };
 
-    this.showFace = function () {
-
-    };
     this.showBack = function (time){
         if(this.faceHasFlipped){
             if (this.angle < 95 && !this.hasItFlipped){
@@ -329,36 +327,95 @@ function completeGame() {
 }
 
 
-function flipCard() {
+function flipCard(card) {
 
-    if (firstCard.angle < 95 && !firstCard.hasItFlipped){
-        firstCard.elm.style.transform = "rotateY(" + firstCard.angle + "deg)";
-        firstCard.angle += 1;
-        console.log(String(firstCard.hasItFlipped));
-        if(firstCard.angle > 90) {
-            firstCard.hasItFlipped = true;
-            console.log(String(firstCard.hasItFlipped));
-            firstCard.elm.firstElementChild.src = firstCard.cardFace;
+    if (card.angle < 95 && !card.hasItFlipped){
+        card.elm.style.transform = "rotateY(" + card.angle + "deg)";
+        card.angle += 5;
+
+        if(card.angle > 90) {
+            card.hasItFlipped = true;
+            card.elm.firstElementChild.src = card.cardFace;
         }
+
+        if(card.timeKeeper === null)
+         card.timeKeeper = requestAnimationFrame(function () {
+             flipCard(card)
+         });
+        else
+            requestAnimationFrame(function () {
+                flipCard(card)
+            })
     }
-    else if(firstCard.angle > 0 && !firstCard.doneFlipping){
-        firstCard.elm.style.transform = "rotateY(" + firstCard.angle + "deg)";
-        firstCard.angle -= 1;
-        if(firstCard.angle < 0) {
-            firstCard.doneFlipping = true;
+    else if(card.angle > 0 && !card.doneFlipping){
+        card.elm.style.transform = "rotateY(" + card.angle + "deg)";
+        card.angle -= 5;
+        if(card.angle < 0) {
+            card.doneFlipping = true;
         }
+        requestAnimationFrame(function () {
+            flipCard(card);
+        });
     }
     else{
-        firstCard.faceHasFlipped = true;
-        firstCard.hasItFlipped = false;
-        firstCard.doneFlipping = false;
-        firstCard.angle = 0;
-        //cancelAnimationFrame(time);
+        card.faceHasFlipped = true;
+        card.hasItFlipped = false;
+        card.doneFlipping = false;
+        card.angle = 0;
+        cancelAnimationFrame(card.timeKeeper);
+    }
+
+}
+
+
+function flipBackCard(card){
+    if(card.faceHasFlipped){
+        if (card.angle < 95 && !card.hasItFlipped){
+            card.elm.style.transform = "rotateY(" + card.angle + "deg)";
+            card.angle += 5;
+            if(card.angle >= 90) {
+                card.hasItFlipped = true;
+                card.elm.firstElementChild.src = backDesign;
+            }
+
+            if(card.timeKeeper === null)
+                card.timeKeeper = requestAnimationFrame(function () {
+                    flipBackCard(card)
+                });
+            else
+                requestAnimationFrame(function () {
+                    flipBackCard(card)
+                })
+        }
+        else if(card.angle > 0 && !card.doneFlipping) {
+            card.elm.style.transform = "rotateY(" + card.angle + "deg)";
+            card.angle -= 5;
+            if (card.angle <= 0) {
+                card.doneFlipping = true;
+                card.angle = 0;
+                cancelAnimationFrame(card.timeKeeper);
+            }
+            else {
+                requestAnimationFrame(function () {
+                    flipBackCard(card)
+                })
+            }
+        }
+
     }
 }
 
 
+function clearCardClick(timer) {
 
+    if ((firstCard.doneFlipping && firstCard.faceHasFlipped)&&(secondCard.doneFlipping && secondCard.faceHasFlipped)) {
+        secondCard.reset();
+        firstCard.reset();
+        firstCard = null;
+        secondCard = null;
+        clearInterval(timer);
+    }
+}
 /*////////////////////////////////////////////////////////////////////////////////////////////
 //this is the card matching logic
  //////////////////////////////////////////////////////////////////////////////////////////*/
@@ -371,13 +428,12 @@ function cardClick(idNum){
             }
         });
         if(!firstCard.faceHasFlipped){
-            requestAnimationFrame(flipCard)
+            flipCard(firstCard);
         }
         else{
             alert("this card has been flipped");
             firstCard = null;
         }
-
     }
     else if(secondCard === null && idNum !== firstCard.count){
         Deck.forEach(function (t) {
@@ -385,30 +441,18 @@ function cardClick(idNum){
                 secondCard = t;
         });
         if(!secondCard.faceHasFlipped) {
-            var secondTimer = setInterval(function () {
-                secondCard.showFace(secondTimer);
-            });
+
+            flipCard(secondCard);
 
             setTimeout(function () {
                 if (secondCard.cardFace !== firstCard.cardFace) {
-                    var thirdTimer = setInterval(function () {
-                        firstCard.showBack(thirdTimer);
-                        if (firstCard.doneFlipping && firstCard.faceHasFlipped) {
-                            firstCard.reset();
-                            firstCard = null;
-                        }
 
+                    flipBackCard(firstCard);
+                    flipBackCard(secondCard);
 
-                    });
-                    var forthTimer = setInterval(function () {
-                        secondCard.showBack(forthTimer);
-                        if (secondCard.doneFlipping && secondCard.faceHasFlipped) {
-                            secondCard.reset();
-                            secondCard = null;
-                        }
-
-
-                    });
+                    var timer = setInterval(function () {
+                        clearCardClick(timer);
+                    },1000);
                 }
                 //if firstCard count === idNum the user has clicked the same card
                 else if (firstCard.count === idNum) {
