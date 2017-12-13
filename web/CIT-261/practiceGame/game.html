@@ -5,7 +5,7 @@
     <title>MemoryChalenge</title>
     <script src="flipLogic.js"></script>
     <style>
-        
+
         body{
             background-image: url("holidays.jpg");
         }
@@ -14,7 +14,26 @@
             position: relative;
             margin: 0 0 0 200px;
         }
-
+        
+        @keyframes FBlogIn {
+            from {
+                background-color: azure;
+                color: black
+            }
+            to {
+                background-color: blue;
+                color: white
+            }
+        }
+        #log{
+            background-color: azure;
+            border: none;
+            text-align: center;
+            font-size: 22px;
+            animation-name: FBlogIn;
+            animation-duration: 15s;
+            animation-fill-mode: forwards;
+        }
     </style>
 </head>
 <body onload="setDeck()">
