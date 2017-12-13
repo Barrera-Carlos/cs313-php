@@ -17,6 +17,7 @@ var secondCard = null;
 var playerStats = null;
 var timer = null;
 var timeInterval = 0;
+var themeNum = 1;
 
 
 /*////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,14 +185,11 @@ function saveStats() {
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
 
-    // While there remain elements to shuffle...
     while (0 !== currentIndex) {
 
-        // Pick a remaining element...
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-
-        // And swap it with the current element.
+        
         temporaryValue = array[currentIndex];
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
@@ -432,7 +430,7 @@ function changeThem(inputChosen){
     var back = document.body;
     var c = null;
 
-    if(inputChosen === 1){
+    if(inputChosen === 1 && themeNum === 2){
         backDesign = "cardImg/holi.png";
         for (var i = 0; i < cards.length; i++){
                 if(!Deck[i].faceHasFlipped){
@@ -440,9 +438,11 @@ function changeThem(inputChosen){
                     c[0].src = backDesign;
                 }
         }
-        back.style.backgroundImage = "url(\"holidays.jpg\")";
+        //back.style.backgroundImage = "url(\"holidays.jpg\")";
+        back.style.animationName = "holi";
+        themeNum = 1;
     }
-    else{
+    else if(inputChosen === 2 && themeNum === 1){
         backDesign = "cardImg/back2.png";
         for (var s = 0; s < cards.length; s++){
             if(!Deck[s].faceHasFlipped){
@@ -450,7 +450,9 @@ function changeThem(inputChosen){
                 c[0].src = backDesign;
             }
         }
-        back.style.backgroundImage = "url(\"white-wallpaper13.jpg\")";
+        //back.style.backgroundImage = "url(\"white-wallpaper13.jpg\")";
+        back.style.animationName = "norm";
+        themeNum = 2;
     }
 
 }

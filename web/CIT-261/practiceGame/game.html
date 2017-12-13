@@ -6,8 +6,19 @@
     <script src="flipLogic.js"></script>
     <style>
 
+        @keyframes holi {
+            from{background-image: url("white-wallpaper13.jpg");}
+            to {background-image: url("holidays.jpg");}
+        }
+        @keyframes norm {
+            from{background-image: url("holidays.jpg");}
+            to {background-image: url("white-wallpaper13.jpg");}
+        }
         body{
-            background-image: url("holidays.jpg");
+            background-image: url("white-wallpaper13.jpg");
+            animation-name: holi;
+            animation-duration: 4s;
+            animation-fill-mode: forwards;
         }
 
         #stage {
