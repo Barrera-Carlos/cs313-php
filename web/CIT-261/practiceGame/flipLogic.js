@@ -1,5 +1,5 @@
 var Deck = [];
-var backDesign = "cardImg/back2.png";
+var backDesign = "cardImg/holi.png";
 var cardFace = [
     "cardImg/2.png",
     "cardImg/3.png",
@@ -419,6 +419,37 @@ function cardClick(idNum){
 
     if(playerLoggedIn){
         playerStats.clicks += 1;
+    }
+
+}
+
+/*////////////////////////////////////////////////////////////////////////////////////////////
+//this function changes the theme of the aplication
+ //////////////////////////////////////////////////////////////////////////////////////////*/
+function changeThem(inputChosen){
+    var cards = document.getElementsByClassName("card");
+    var back = document.body;
+    var c = null;
+
+    if(inputChosen === 1){
+        backDesign = "cardImg/holi.png";
+        for (var i = 0; i < cards.length; i++){
+                if(!Deck[i].faceHasFlipped){
+                    c = cards[i].childNodes;
+                    c[0].src = backDesign;
+                }
+        }
+        back.style.backgroundImage = "url(\"holidays.jpg\")";
+    }
+    else{
+        backDesign = "cardImg/back2.png";
+        for (var s = 0; s < cards.length; s++){
+            if(!Deck[s].faceHasFlipped){
+                c = cards[s].childNodes;
+                c[0].src = backDesign;
+            }
+        }
+        back.style.backgroundImage = "url(\"white-wallpaper13.jpg\")";
     }
 
 }
