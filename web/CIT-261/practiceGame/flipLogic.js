@@ -318,11 +318,12 @@ function stackDeck(DeckIndex) {
         Deck[DeckIndex].reset();
         Deck[DeckIndex].faceHasFlipped = true;
 
-        //card is not flipping because in Card.showBack faceHasFlipped needs to be true
+        //showBack faceHasFlipped needs to be true
         //for the flipping to commence. but its set as false because of the reset.
         var time = setInterval(function () {
             Deck[DeckIndex].showBack(time);
         },10);
+
         stackDeck(DeckIndex+1);
     }
 }
@@ -488,6 +489,7 @@ function restGame(){
     for( var i = 0; i < shuffledLocation.length; i++){
         Deck[i].reset();
         Deck[i].moveCard(shuffledLocation[i].x,shuffledLocation[i].y);
+        Deck[i].elm.firstElementChild.src = backDesign;
     }
     timeInterval = 0;
     timer = setInterval(function () {
