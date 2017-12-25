@@ -92,6 +92,7 @@ function removeItemFromArr(elmToRemove) {
 /////////////////////////////////////////////////////*/
 function BUTTON(canItDeleteArr) {
     var btn = document.createElement("SPAN");
+    btn.classList.add("closeBtn");
     var txt = document.createTextNode("\u2714");
     btn.appendChild(txt);
     if(canItDeleteArr){
@@ -184,6 +185,7 @@ function addItem() {
         parent.appendChild(newLIElement);
         addItemToArr(newArrItem);
     }
+    document.getElementById("input").value = "";
 }
 
 /*/////////////////////////////////////////////////////

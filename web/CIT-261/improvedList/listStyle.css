@@ -1,0 +1,79 @@
+.container{
+    background: dodgerblue;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#title{
+    text-align: center;
+    color: #f9f9f9;
+}
+
+#input{
+    border: none;
+    width: 70%;
+    padding: 10px;
+    padding-left: 20px;
+    font-size: 16px;
+
+    float: left;
+}
+
+#addButton{
+    background-color: lightslategray;
+    color: white;
+    width: 20%;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+
+
+
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+}
+
+ul li{
+    list-style-type: none;
+    cursor: pointer;
+    background-color: darkgray;
+    color: white;
+    font-size: 20px;
+    transition: 3s;
+    position: relative;
+    padding: 12px 8px 12px 40px;
+}
+
+ul li:nth-child(odd){
+    background: #f9f9f9;
+    color: darkgray;
+}
+
+.closeBtn{
+    position: absolute;
+    right: 10%;
+    top: 0;
+    padding: 12px 8px 8px 8px;
+}
+
+.closeBtn:hover{
+    background-color: darkgray;
+    color: dodgerblue;
+}
+
+#return{
+    clear: bottom;
+    background-color: lightslategray;
+    color: white;
+    width: 25%;
+    border: none;
+    padding: 15px 45px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}

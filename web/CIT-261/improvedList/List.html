@@ -3,38 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>List</title>
-
-    <style>
-        .container{
-            text-align: center;
-        }
-
-        #myList{
-            text-align: center;
-            list-style: none;
-        }
-
-        #listItem{
-            padding-bottom: 15px;
-        }
-
-        span{
-            padding-left: 20px;
-        }
-    </style>
-
+    <link rel="stylesheet" type="text/css" href="listStyle.css">
     <script src="ListJs.js" type="text/javascript"></script>
 </head>
 <body onload="setUp()">
 
     <div class="container">
-    <input type="text" placeholder="Add List" id="input">
-        <button type="button" onclick="addItem()">Add</button>
-        <button id="return" onclick="goBack()">Return</button>
+        <h1 id="title">MY LIST</h1>
+        <input type="text" placeholder="Add List" id="input">
+        <button type="button" id="addButton" onclick="addItem()">Add</button>
     </div>
 
     <ul id="myList">
     </ul>
 
+    <button id="return" onclick="goBack()">Return</button>
 </body>
 </html>
